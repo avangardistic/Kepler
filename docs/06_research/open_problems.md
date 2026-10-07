@@ -1,5 +1,10 @@
 # Open Problems
 
+> Editor's note (2026-10-07, Session 2): legacy list, still Persian; kept
+> verbatim. Tracked status now lives per-topic in this folder
+> (`physics/`, `detectors/`, `market_making/`, registry in `README.md`).
+> #1 (gravity↔repulsion) and #7 (quantized time) intersect CON-003/R-PHY-002.
+
 ## 1. جاذبه vs دافعه
 در همبستگی منفی، گرانش نیوتنی اشتباه است. مدل جدید لازم است.
 

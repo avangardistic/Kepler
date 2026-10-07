@@ -11,15 +11,21 @@ each invariant boundary.
 Invariants
 ----------
 I1  Angular momentum bounded          (H1: ‖L‖ ≤ 10·L̄ in 95% of ticks)
-I2  Total energy conserved           (relative drift < 1e-9 per step)
-I4  Virial ratio → −½                (|T/V + ½| < 0.2 over long run)
+I2  Total energy conserved           (relative drift < 1e-9; requires
+                                      float64 — see tests/conftest.py)
+I4  Virial ratio → −½                (|T/V + ½| < 0.2; tested on the only
+                                      conservative configuration where −½ is
+                                      instantaneously exact: a 2-D circular
+                                      orbit.  See R-PHY-001 / FailureModes F10
+                                      for why 1-D bound orbits cannot work.)
 I6  |Imbalance| ≤ 1                  (always)
 I7  Spread > 0  ⇒  bid < ask        (always; checked in state construction)
 
 Hypotheses
 -----------
 H1  ‖L‖ bounded                      (same as I1)
-H2  T/V → −1/2                       (same as I4)
+H2  T/V → −1/2                       (same as I4; REVISED claim wording in
+                                      docs/07_hypotheses/Hypotheses.md)
 H3  Π ∝ ∫|L| dt  (proxy: recorded here, tested on simulation data)
 H7  Hedge constraint |φ| < 1e-6     (tested in test_mm.py)
 """
@@ -33,12 +39,6 @@ import pytest
 from src.physics_jax import (
     ThreeBodyState,
     compute_angular_momentum,
-    compute_kinetic_energy,
-    compute_potential_energy,
-    compute_total_energy,
-    compute_virial_ratio,
-    compute_imbalance,
-    symplectic_step,
     integrate,
     state_from_l2,
 )
@@ -116,76 +116,85 @@ def test_energy_conservation_relative_drift(symmetric_state: ThreeBodyState) -> 
 
 
 # ------------------------------------------------------------------
-# I4 / H2 — virial ratio → −½
+# I4 / H2 — virial ratio → −½  (2-D circular orbit)
 # ------------------------------------------------------------------
 
 def test_virial_ratio_convergence() -> None:
-    """H2 / I4: generalized virial theorem for conservative subsystem.
+    """H2 / I4: virial ratio of a conservative circular orbit is −½.
 
-    Tests the generalized virial theorem for a CONSERVATIVE subsystem
-    (no friction, no external forces):
+    History of this test (see docs/06_research/physics/virial_theorem.md):
+    it previously used 1-D initial conditions (x=∓1, v=±0.1) and reported
+    ⟨T⟩/⟨V⟩ → −1.0008.  Two compounding defects:
+    (1) Unphysical setup — in 1-D every bound orbit is a RADIAL PLUNGE (zero
+        angular momentum ⇒ no centrifugal barrier); close approaches are
+        unresolved at dt=1e-3, numerical heating drives E −0.115 → +296 and
+        the pair escapes.  Setting v = v_circ in 1-D fails identically
+        (E −0.0625 → +160): a circular orbit does not exist in 1-D.
+    (2) Test bug — `L, E, V, _ = integrate(...)` bound the 3rd return value
+        (the per-tick VIRIAL RATIO T/V) to a variable named `V`, so the old
+        "<V>" was really ⟨T/V⟩ (dominated by the |V|<ε division guard once the
+        pair escaped, mean −376,445) and "<T>" was fabricated as E − T/V.
+        The reported −1.0008 = Ē/V̄ − 1 was an algebraic echo measuring nothing.
 
-        2<T> + <V> = 0  ->  <T>/<V> = -0.5
+    Correct conservative setup: a genuine circular orbit needs an
+    angular-momentum barrier, i.e. >= 2-D motion.  Two equal masses m = 1,
+    half-separation r = d/2 = 1, self-induced G = 1/⟨d²⟩ = 1/4 (Axiom 4,
+    computed from the initial state exactly as integrate() does):
 
-    For systems WITH friction and external forces, see
-    Physics.md §Virial Theorem (Generalized).
+        per-body centripetal balance:  m v² / r = G m² / d²
+        ⇒  v_circ = sqrt(G·m·r / d²) = sqrt(0.25·1·1 / 4) = 0.25
+           (equivalently v_rel = sqrt(G(m₁+m₂)/d) = 0.5, split equally)
 
-    Criterion: |<T>/<V> + 0.5| < 0.2 (from Invariants.md I4).
+        T = ½·2·m·v² = 0.0625 ,   V = −G·m²/d = −0.125
+        ⇒  T/V = −1/2  EXACTLY, and constant at every tick.
+
+    Criterion: |T/V + 0.5| < 0.2 (from Invariants.md I4) — UNCHANGED.
+    For a circular orbit it is checked both instantaneously (max over
+    ticks) and on the time-average; friction and external imbalance are
+    zero so the generalized theorem (Physics.md §Virial Generalized)
+    reduces to the standard form.  The 1-D radial-infall configuration is
+    kept as a documented failure mode (F10), not as a passing test.
     """
-    # Two-body system with initial velocities tuned for approximate
-    # virial equilibrium (circular orbit velocity)
-    # Use self-induced gravity (None = compute from state per Axiom 4)
-    
-    # Two equal masses, separation d=2, in near-circular orbit
-    x = jnp.array([-1.0, 1.0])
+    x = jnp.array([[-1.0, 0.0], [1.0, 0.0]])
+    # Tangential velocities ⇒ exact circular orbit (derivation above)
+    v = jnp.array([[0.0, -0.25], [0.0, 0.25]])
     m = jnp.array([1.0, 1.0])
-    # Small velocity perturbation — system will oscillate around equilibrium
-    v = jnp.array([0.1, -0.1])
-    I = jnp.zeros(2)       # No external force
-    gamma = jnp.zeros(2)   # No friction (conservative subsystem)
+    I = jnp.zeros(2)       # No external force  (conservative subsystem)
+    gamma = jnp.zeros(2)   # No friction        (conservative subsystem)
     state = ThreeBodyState(x=x, v=v, m=m, I=I, gamma=gamma)
 
     n = 20_000
-    dt = 0.001  # Small dt for good conservation
-    L, E, V, _ = integrate(state, n, G=None, dt=dt)
+    dt = 0.001
+    # integrate() freezes G = compute_self_induced_G(state_0) = 1/⟨d²⟩ = 0.25,
+    # consistent with the v_circ derivation above.
+    L_norm, energy, virial, _ = integrate(state, n, G=None, dt=dt)
 
-    # Compute T = E - V at each tick
-    T = E - V
-
-    # Skip equilibration period (first 5000 ticks)
     skip = 5_000
-    T_post = T[skip:]
-    V_post = V[skip:]
+    vir_post = virial[skip:]
+    dev_mean = float(abs(jnp.mean(vir_post) + 0.5))
+    dev_max = float(jnp.max(jnp.abs(vir_post + 0.5)))
+    print(f"virial: mean={float(jnp.mean(vir_post)):.6f}, "
+          f"|dev_mean|={dev_mean:.2e}, |dev_max|={dev_max:.2e}")
 
-    # Time-averaged virial ratio
-    T_avg = jnp.mean(T_post)
-    V_avg = jnp.mean(V_post)
-    ratio_avg = T_avg / V_avg if abs(V_avg) > 1e-10 else 0
+    # Invariants.md I4 criterion, unchanged: deviation < 0.2
+    assert dev_mean < 0.2, f"H2/I4 rejected: mean dev {dev_mean:.4f} > 0.2"
+    # Circular orbit ⇒ the stronger per-tick statement must also hold.
+    assert dev_max < 0.2, f"H2/I4 rejected: per-tick dev {dev_max:.4f} > 0.2"
 
-    print(f"After {skip} ticks: <T>={T_avg:.6f}, <V>={V_avg:.6f}")
-    print(f"  <T>/<V> = {ratio_avg:.6f} (target: -0.5)")
-    print(f"  |<T>/<V> + 0.5| = {abs(ratio_avg + 0.5):.6f}")
+    # Side-checks on the same trajectory:
+    # I2 — energy conserved along the circular orbit (float64, see conftest)
+    E0 = energy[0]
+    rel_drift = jnp.max(jnp.abs(energy - E0) / jnp.abs(E0))
+    print(f"energy: E0={float(E0):.6f}, max rel drift={float(rel_drift):.2e}")
+    assert rel_drift < 1e-9, f"I2 rejected on circular orbit: {rel_drift:.2e}"
 
-    # Criterion from Invariants.md: |<T>/<V> + 0.5| < 0.2 for I4
-    deviation = abs(ratio_avg + 0.5)
-    
-    assert deviation < 0.2, (
-        f"H2/I4 rejected: virial ratio deviation {deviation:.4f} > 0.2 "
-        f"(<T>={T_avg:.4f}, <V>={V_avg:.4f}, ratio={ratio_avg:.4f})"
-    )
-
-    # Check angular momentum bounded (H1)
-    L_max = jnp.max(L)
-    L_mean = jnp.mean(L)
-    print(f"Angular momentum: mean={L_mean:.6f}, max={L_max:.6f}")
-    # For this 1D system with no angular motion, L should stay ~0
+    # H1 — angular momentum bounded (here L ≈ 0.5, m r v ×2 bodies)
+    L_max, L_mean = float(jnp.max(L_norm)), float(jnp.mean(L_norm))
+    print(f"angular momentum: mean={L_mean:.6f}, max={L_max:.6f}")
     assert L_max < 1.0, f"H1 failed: L grew to {L_max}"
 
-    # Check virial ratio is finite (not the main test, just sanity)
-    virial = T / jnp.where(jnp.abs(V) > 1e-10, V, 1e-10)
-    virial_finite = jnp.all(jnp.isfinite(virial))
-    print(f"Virial ratio finite: {virial_finite}")
-    assert virial_finite, "Virial ratio went non-finite"
+    # Sanity: everything finite
+    assert jnp.all(jnp.isfinite(virial)), "Virial ratio went non-finite"
 
 
 # ------------------------------------------------------------------

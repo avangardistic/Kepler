@@ -49,6 +49,26 @@ where:
 
 **Note:** This generalized form is REQUIRED for testing H2 when friction and external forces are present. The standard virial theorem ($2\langle T \rangle + \langle V \rangle = 0$) applies ONLY to the conservative subsystem (no friction, no external forces).
 
+## Virial Theorem — Numerical Requirements (added 2026-10-07, R-PHY-001)
+The identities above are statements about trajectories of the *continuous*
+system with *constant* $G$. Empirically verified requirements for any test of
+them (see `06_research/physics/virial_theorem.md` for full data):
+1. **Dimensionality.** In 1-D every bound orbit is a radial plunge (L = 0,
+   no centrifugal barrier); its close approach cannot be resolved at tick-like
+   dt, so per-tick or partial-window "virial ratios" measure numerical heating,
+   not physics (FailureModes F10). Circular orbits, where
+   $T/V = -\frac12$ holds at every tick, exist only for configurations with
+   $\|\vec L\| > 0$.
+2. **Windowing.** $\langle T\rangle/\langle V\rangle = -\frac12 + O(\epsilon)$
+   was measured at $\le 10^{-7}$ deviation for eccentricities up to e ≈ 0.75
+   when averaging over exact integer Kepler periods; partial windows carry
+   $O(10^{-2})$ bias.
+3. **Precision.** float64 is required for the 1e−9-class conservation
+   assertions (float32 ε ≈ 1.2e−7).
+4. **Softening.** Isotropic: $d_\epsilon = \sqrt{\|\Delta x\|^2 + \epsilon^2}$
+   on the full separation vector (engine fixed 2026-10-07; per-coordinate
+   softening is not a central force and admits no circular orbit).
+
 ## Noether Charge
 
 If $\mathcal{L}$ is invariant under translation, then:
@@ -75,5 +95,14 @@ G_{eff}(t) = \frac{1}{\langle d^2 \rangle_t} = \frac{1}{\frac{1}{N}\sum_{i<j} |x
 $$
 
 In practice, this is computed as a running average over recent ticks to ensure stability.
+
+> **Implementation status note (2026-10-07 audit):** the engine currently
+> computes $G_{eff}$ **once from the initial state and freezes it** for the
+> trajectory (`integrate()`), which is a *different* dynamical system from the
+> running-average reading above (only frozen G is Hamiltonian/conservative —
+> see I2). The divergence, and the degenerate-geometry fallback `G = 1.0`
+> (a magic constant in disguise), are tracked as **CON-003** and analyzed in
+> `06_research/physics/gravity_derivation.md` (R-PHY-002). Do not "fix" either
+> side before that decision is recorded here and in Decisions.md.
 
 **This replaces any "magic G" constant. If a constant is needed, it MUST be logged in Conflicts.md with justification.**

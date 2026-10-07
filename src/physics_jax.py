@@ -32,6 +32,20 @@ DT_TICK: float = 1.0            # One tick = one integration step
 # G is NOT a constant — it is self-derived from the system geometry.
 # Use compute_self_induced_G() to get G_eff for a given state.
 # See Physics.md §Self-Induced Gravity and Axiom 4.
+#
+# PRECISION NOTE: "machine precision" conservation (I2, Physics.md
+# §Symplectic Integrator) requires float64.  JAX defaults to float32, whose
+# epsilon (~1.2e-7) makes the 1e-9 thresholds in Invariants.md unreachable.
+# Tests enable jax_enable_x64 in tests/conftest.py; any production harness
+# that must verify I2/I4 numerics must do the same.
+#
+# DIMENSIONALITY NOTE: positions may be 1-D (one log-microprice per body,
+# the market-native embedding) or multi-D.  Softening is ISOTROPIC:
+# dist = sqrt(‖dx‖² + ε²) on the full separation vector (F10 /
+# 06_research/physics/virial_theorem.md).  NOTE: in 1-D every bound
+# gravitational orbit is a radial plunge — there is no angular-momentum
+# barrier — so circular-orbit states (T/V = -1/2 instantaneously) exist
+# only in >= 2-D.
 
 
 @dataclass(frozen=True)
@@ -143,13 +157,14 @@ def compute_self_induced_G(state: ThreeBodyState) -> float:
     if n < 2:
         return 1.0  # Single body, no gravity
     
-    # Compute mean squared distance
+    # Compute mean squared distance (sum over spatial dimensions so the
+    # coupling is a scalar for multi-D configurations as well as 1-D)
     d_sq_sum = 0.0
     count = 0
     for i in range(n):
         for j in range(i + 1, n):
             dx = state.x[i] - state.x[j]
-            d_sq_sum += dx ** 2
+            d_sq_sum += jnp.sum(dx ** 2)
             count += 1
     
     if count == 0 or d_sq_sum < EPSILON:
@@ -188,7 +203,8 @@ def compute_potential_energy(state: ThreeBodyState,
     for i in range(n):
         for j in range(i + 1, n):
             dx = state.x[i] - state.x[j]
-            dist = jnp.sqrt(dx ** 2 + EPSILON ** 2)
+            # Isotropic softening on the full separation vector (multi-D safe)
+            dist = jnp.sqrt(jnp.sum(dx ** 2) + EPSILON ** 2)
             V -= G * state.m[i] * state.m[j] / dist
     return V
 
@@ -241,17 +257,19 @@ def acceleration(state: ThreeBodyState,
 
     Returns
     -------
-    a : ndarray, shape (N,)
+    a : ndarray, same shape as state.x — (N,) for 1-D, (N, dim) for multi-D.
         Acceleration per body (N = number of bodies, expected 3).
     """
     n = len(state.x)
-    a = jnp.zeros(n)
+    a = jnp.zeros_like(state.x)
     for i in range(n):
-        grav = 0.0
+        grav = jnp.zeros_like(state.x[i])
         for j in range(n):
             if i != j:
                 dx = state.x[i] - state.x[j]
-                dist = jnp.sqrt(dx ** 2 + EPSILON ** 2)
+                # Isotropic softening: distance is the norm of dx, not
+                # per-coordinate (see module header, Dimensionality note).
+                dist = jnp.sqrt(jnp.sum(dx ** 2) + EPSILON ** 2)
                 # Gravitational acceleration per unit mass: -G m_j (x_i - x_j) / r³
                 grav -= G * state.m[j] * dx / (dist ** 3)
         # Add imbalance acceleration and friction (per unit mass)
@@ -370,13 +388,15 @@ def integrate(state_0: ThreeBodyState,
                         "imbalance_abs": Iabs}
 
     # Record initial state first (must match hist dtypes/shapes)
+    # imbalance uses max|I| per body — same statistic as body_fn below
+    # (was ‖I‖₂ at t=0, inconsistent with per-tick max; audit fix 2026-10-07)
     L0 = compute_angular_momentum(state_0)
     I0 = compute_imbalance(state_0)
     init_hist = {
         "L_norm": jnp.array([jnp.linalg.norm(L0)]),
         "energy": jnp.array([compute_total_energy(state_0, G)]),
         "virial": jnp.array([compute_virial_ratio(state_0, G)]),
-        "imbalance_abs": jnp.array([jnp.linalg.norm(I0)]),  # scalar, matches hist
+        "imbalance_abs": jnp.array([jnp.max(jnp.abs(I0))]),  # scalar, matches hist
     }
 
     _, hist = lax.scan(body_fn, state_0, jnp.arange(n_ticks))
