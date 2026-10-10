@@ -33,19 +33,21 @@ notes when each applies. The test remains unchanged and passes.
 **Resolution:** x64 enabled in `physics_jax.py` via `jax.config.update("jax_enable_x64", True)`, as prescribed by ADR-002. Verified: 9/9 tests pass without environment variables.
 **Status:** RESOLVED — 2026-10-10. Correction logged in ResearchLog.md and Changelog.md.
 
-## CON-004: Undocumented transverse velocity injection (escalated to human)
+## CON-004: Undocumented transverse velocity injection (RESOLVED)
 **Date:** 2026-10-10
-**Files:** `src/physics_jax.py` `_stabilized_state` (embeds 1D states with `v_y = 0.25·sign(v_x)`) vs `docs/goal.md` (Constraints: "All parameters derived internally from geometry", "No external parameters") and `docs/AI_Protocol.md` ("Do not use external parameters without documenting the violation")
-**Description:**
-- The constant `0.25` is not derived from geometry and is not documented in any file under `docs/`.
-- It injects angular momentum: for the 2-body test in `test_virial_ratio_convergence`, ‖L‖ ≈ 0.5 (constant), while the test comment states L should stay ≈ 0. The test only passes because its threshold is `L_max < 1.0`.
-- Experiment (copy in /tmp, not committed): setting the constant to 0 makes `test_virial_ratio_convergence` fail with ⟨T⟩/⟨V⟩ ≈ −252400 (radial collapse). The injection is therefore functionally load-bearing for the 1D path.
-**Severity:** HIGH (violates the immutable constraint "all parameters derived from geometry"; also contradicts the "L ≈ 0" comment in the test)
-**Proposed resolutions (decision required):**
-1. Keep the constant, document it as an explicit, justified violation in Decisions.md, and correct the test comment.
-2. Derive the transverse velocity from state geometry (requires a new ADR and a new formula in Physics.md).
-3. Remove the 1D embedding entirely and require callers to supply 2D/3D states (requires changing the virial test setup).
-**Status:** OPEN — escalated to human. No code change made.
+**Files:** `src/physics_jax.py` `_stabilized_state` (previously `v_y = 0.25·sign(v_x)`) vs `docs/goal.md` ("All parameters derived internally from geometry", "No external parameters").
+**Description:** The constant `0.25` was not derived from geometry and was not documented. It also produced a non-zero angular momentum (≈ 0.5) while the test comment claimed L ≈ 0. Removing it outright broke `test_virial_ratio_convergence` (⟨T⟩/⟨V⟩ ≈ −252400).
+**Human decision:** Derive the transverse velocity from geometry (option 2). Chosen 2026-10-10 by the project owner; formula chosen under the instruction to "use the most precise formulas".
+**Resolution:** Rigid rotation about the mass centre with ω fitted to the self-induced gravity (ADR-008, Physics.md §Embedding). Constant removed. Test comment corrected; threshold unchanged. All 9 tests pass.
+**Status:** RESOLVED — 2026-10-10.
+
+## CON-005: Self-induced G normalisation mismatch (RESOLVED, one open remark)
+**Date:** 2026-10-10
+**Files:** `src/physics_jax.py` `compute_self_induced_G` (divided by the number of pairs) vs `docs/Physics.md` §Self-Induced Gravity (divides by N, the number of bodies).
+**Description:** The two normalisations are identical for N = 3 (the target three-asset system) and differ for N = 2 (test-only subsystem). Measured: if the rotation used the Physics.md G while `integrate` used the code G, the two-body virial test failed (⟨T⟩/⟨V⟩ ≈ −2.39 over 200k ticks), because the velocities and the forces were computed with different couplings.
+**Resolution:** Code aligned to Physics.md (1/N) in one shared helper `_self_induced_G_from_positions`, used by both the rotation and `compute_self_induced_G`. Consistency verified: two-body virial test passes.
+**Status:** RESOLVED — 2026-10-10.
+**Open remark (not changed):** Physics.md specifies a running time-average of ⟨d²⟩_t. The code uses the value from the initial state, held fixed in `integrate` (documented in its docstring). This is a known gap and needs a decision if the running average is required.
 
 ## Conflict Resolution Rules
 1. If conflict with Philosophy → Philosophy wins.
@@ -59,4 +61,5 @@ notes when each applies. The test remains unchanged and passes.
 | 2026-10-07 | CON-001: G_DEFAULT violation | ADR-007 rejected |
 | 2026-10-07 | CON-002: Virial test threshold loosening (log error) | Corrected log entry; test + invariants unchanged |
 | 2026-10-10 | CON-003: Energy test fails under float32 | RESOLVED — x64 enabled (ADR-002) |
-| 2026-10-10 | CON-004: Undocumented 0.25 transverse velocity constant | OPEN — escalated to human |
+| 2026-10-10 | CON-004: Undocumented 0.25 transverse velocity constant | RESOLVED — rigid rotation from geometry (ADR-008) |
+| 2026-10-10 | CON-005: G normalisation (pairs vs N) | RESOLVED — aligned to Physics.md (1/N) |

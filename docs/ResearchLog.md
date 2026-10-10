@@ -80,3 +80,31 @@
 **Next:**
 - Human decision on CON-004.
 - T-001, T-002 (infrastructure), T-005 to T-007 remain open.
+
+## [2026-10-10] [Phase 2] [Geometric Embedding (ADR-008) and Tool Selection (ADR-009)]
+
+**Goal:** Remove the undocumented transverse-velocity constant (CON-004) using the most precise formula derivable from the documents, and decide whether any heavy computation needs another language.
+
+**Method:**
+- Tested candidate embeddings on copies in /tmp (not committed):
+  - Same-direction velocity for all bodies: energy blows up (0.01 → 282); virial test fails.
+  - Rigid rotation with Kepler speed and heuristic r̄: virial test passes (deviation 0.015).
+  - Rigid rotation with least-squares ω from the force balance and Physics.md G (1/N): virial test passes (0.055 at 20k ticks, 0.0054 at 200k ticks).
+- Found CON-005: the rotation used Physics.md G (1/N) while `integrate` used the code G (1/pairs). Inconsistent couplings gave ⟨T⟩/⟨V⟩ ≈ −2.39. Aligned both to one helper.
+- Measured JAX throughput: ≈ 3.3 M ticks/s (3 bodies, float64, 2 CPU cores). 10 M ticks ≈ 3 s.
+- 5 Whys analysis in docs/ToolSelection.md.
+
+**Result:**
+- Constant 0.25 removed; embedding derived from geometry (ADR-008, Physics.md §Embedding).
+- All 9 tests pass in the default float64 configuration.
+- Python + JAX kept; no other language introduced (ADR-009).
+- Test comment about L ≈ 0 corrected (L ≈ 0.707 is a physical rotation); threshold unchanged.
+
+**Falsifications:**
+- Hypothesis "same-direction transverse velocity conserves energy": falsified (E: 0.01 → 282).
+- Hypothesis "Python is too slow for 10 M ticks": falsified by measurement (≈ 3 s).
+
+**Open:**
+- Running time-average of G (Physics.md) is not implemented; initial-state G is used (CON-005 remark).
+- N ≥ 3 rigid-rotation approximation residual not yet measured.
+- T-001, T-002, T-005 to T-007 remain open.

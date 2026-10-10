@@ -94,19 +94,75 @@ jax.tree_util.register_pytree_node(
 # Derived quantities
 # ------------------------------------------------------------------
 
+def _self_induced_G_from_positions(x: jnp.ndarray) -> jnp.ndarray:
+    """Self-induced coupling G = 1 / <d²>, with <d²> = (1/N) Σ_{i<j} |x_i − x_j|².
+
+    Normalisation follows Physics.md §Self-Induced Gravity (1/N, N = number of
+    bodies). Works for positions of shape (N,) or (N, D).  Returns 1.0 for
+    degenerate configurations (N < 2 or all bodies coincident).
+    """
+    x2 = x.reshape(x.shape[0], -1)
+    n = x2.shape[0]
+    if n < 2:
+        return jnp.asarray(1.0)
+    diff = x2[:, None, :] - x2[None, :, :]
+    d_sq = jnp.sum(diff ** 2, axis=-1)
+    S = jnp.sum(jnp.triu(d_sq, k=1))          # Σ_{i<j} |x_i − x_j|²
+    degenerate = S < EPSILON
+    S_safe = jnp.where(degenerate, 1.0, S)
+    return jnp.where(degenerate, 1.0, n / S_safe)
+
+
+def _tangential_velocity_1d(x: jnp.ndarray, m: jnp.ndarray) -> jnp.ndarray:
+    """Rigid-rotation velocity about the centre of mass, derived from geometry.
+
+    Rigid rotation with angular frequency ω about the mass centre x̄ gives
+    v_i = ω (x_i − x̄).  The ω that best balances the self-induced gravity
+    (Axiom 4, Physics.md) is the least-squares solution of
+
+        a_i = −ω² (x_i − x̄)            for all i,
+
+    where a_i = −Σ_{j≠i} G m_j (x_i − x_j)/|x_i − x_j|³ and G = G_eff from
+    _self_induced_G_from_positions.  Closed form:
+
+        ω² = −Σ_i a_i (x_i − x̄) / Σ_i (x_i − x̄)²
+
+    For two bodies this is exact (circular orbit).  No free parameters.
+    See Decisions.md ADR-008.
+    """
+    n = x.shape[0]
+    G = _self_induced_G_from_positions(x)
+    M = jnp.sum(m)
+    x_bar = jnp.sum(m * x) / M
+    r = x - x_bar
+
+    diff = x[:, None] - x[None, :]                        # (N, N)
+    dist = jnp.sqrt(diff ** 2 + EPSILON ** 2)             # regularised (F4)
+    pair_acc = -G * m[None, :] * diff / dist ** 3         # a_ij from body j on i
+    pair_acc = jnp.where(jnp.eye(n, dtype=bool), 0.0, pair_acc)
+    a = jnp.sum(pair_acc, axis=1)
+
+    den = jnp.sum(r * r)
+    den_safe = jnp.where(den < EPSILON, 1.0, den)
+    omega2 = -jnp.sum(a * r) / den_safe
+    omega2 = jnp.where(den < EPSILON, 0.0, jnp.maximum(omega2, 0.0))
+    return jnp.sqrt(omega2) * r
+
+
 def _stabilized_state(state: ThreeBodyState) -> ThreeBodyState:
-    """Embed 1D radial states into the orbital plane to prevent collapse.
+    """Embed 1D radial states into the orbital plane as a rigid rotation.
 
     In pure 1D the Newtonian interaction is a radial fall-to-center with no
-    angular barrier, which can drive the system into a non-physical blow-up
-    before the virial theorem can be sampled.  We preserve the original
-    scalar state on the x-axis and inject a tiny, symmetric transverse
-    velocity so the system remains in a bounded orbital regime while keeping
-    the underlying physics otherwise unchanged.
+    angular barrier.  The 1D scalar state is kept on the x-axis and each body
+    receives the tangential velocity of a rigid rotation about the centre of
+    mass, derived from the self-induced gravity (see _tangential_velocity_1d
+    and Decisions.md ADR-008).  The transverse velocity is a function of the
+    geometry only; no external constant is used.
     """
     if state.x.ndim == 1:
+        vy = _tangential_velocity_1d(state.x, state.m)
         x = jnp.stack([state.x, jnp.zeros_like(state.x)], axis=-1)
-        v = jnp.stack([state.v, 0.25 * jnp.sign(state.v)], axis=-1)
+        v = jnp.stack([state.v, vy], axis=-1)
         return ThreeBodyState(x=x, v=v, m=state.m, I=state.I, gamma=state.gamma)
     return state
 
@@ -149,14 +205,11 @@ def compute_self_induced_G(state: ThreeBodyState) -> float:
     Per Axiom 4 and Physics.md §Self-Induced Gravity, the gravitational
     coupling is NOT a free parameter. It is derived from the system geometry:
 
-        G_eff = 1 / <d²>_t
+        G_eff = 1 / <d²>_t,   <d²> = (1/N) Σ_{i<j} |x_i − x_j|²
 
-    where <d²>_t is the time-averaged squared distance between bodies.
-
-    For instantaneous computation (single tick), we use the current
-    squared distances as an approximation:
-
-        G_eff ≈ 1 / (mean of pairwise squared distances)
+    The instantaneous form (current tick) is used here; integrate() holds
+    the value fixed from the initial state.  The 1/N normalisation is the one
+    written in Physics.md (see Conflicts.md CON-005).
 
     Returns
     -------
@@ -164,24 +217,7 @@ def compute_self_induced_G(state: ThreeBodyState) -> float:
         Self-induced gravitational coupling.
     """
     state = _stabilized_state(state)
-    n = len(state.x)
-    if n < 2:
-        return 1.0  # Single body, no gravity
-    
-    # Compute mean squared distance
-    d_sq_sum = 0.0
-    count = 0
-    for i in range(n):
-        for j in range(i + 1, n):
-            dx = state.x[i] - state.x[j]
-            d_sq_sum += jnp.sum(dx ** 2)
-            count += 1
-    
-    if count == 0 or d_sq_sum < EPSILON:
-        return 1.0  # Default for degenerate cases
-    
-    d_sq_mean = d_sq_sum / count
-    return 1.0 / d_sq_mean
+    return _self_induced_G_from_positions(state.x)
 
 
 def compute_potential_energy(state: ThreeBodyState,

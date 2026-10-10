@@ -45,3 +45,10 @@
 - Added .gitignore; untracked committed __pycache__ bytecode files.
 - Correction: the 2026-10-07 log claim of "absolute drift < 1e-5" did not match the I2 criterion (relative 1e-9). See Conflicts.md CON-003.
 - Opened CON-004: undocumented transverse velocity constant (0.25) in `_stabilized_state`, escalated for decision.
+
+## [2026-10-10] — Geometric Embedding and Tool Decision
+- Replaced undocumented `0.25·sign(v)` with rigid-rotation embedding derived from self-induced gravity (ADR-008, CON-004 resolved).
+- Unified self-induced G to Physics.md normalisation (1/N) in one helper (CON-005 resolved).
+- Corrected the virial-test comment on angular momentum; threshold unchanged.
+- Added docs/ToolSelection.md (5 Whys, measured throughput) and ADR-009: keep Python + JAX.
+- All 9 tests pass in default configuration.

@@ -86,3 +86,16 @@ $$
 In practice, this is computed as a running average over recent ticks to ensure stability.
 
 **This replaces any "magic G" constant. If a constant is needed, it MUST be logged in Conflicts.md with justification.**
+
+## Embedding of 1D States: Rigid Rotation (ADR-008)
+
+Bodies given on the x-axis (1D) are embedded in the orbital plane as a rigid rotation about the mass centre $\bar x = \sum_i m_i x_i / \sum_i m_i$:
+
+$$
+v_{y,i} = \omega\,(x_i - \bar x), \qquad
+\omega^2 = -\frac{\sum_i a_i\,(x_i - \bar x)}{\sum_i (x_i - \bar x)^2}
+$$
+
+where $a_i = -\sum_{j\neq i} G_{eff}\,m_j\,(x_i - x_j)/|x_i - x_j|^3$ is the self-induced gravitational acceleration and $G_{eff} = 1/\langle d^2\rangle$ with $\langle d^2\rangle = \frac{1}{N}\sum_{i<j}|x_i - x_j|^2$.
+
+ω is the least-squares solution of the force balance $a_i = -\omega^2(x_i - \bar x)$. For two bodies it is exact (circular orbit). No external parameter is used. This replaces the earlier undocumented constant (Conflicts.md CON-004).
