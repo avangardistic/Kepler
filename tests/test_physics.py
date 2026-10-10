@@ -178,7 +178,9 @@ def test_virial_ratio_convergence() -> None:
     L_max = jnp.max(L)
     L_mean = jnp.mean(L)
     print(f"Angular momentum: mean={L_mean:.6f}, max={L_max:.6f}")
-    # For this 1D system with no angular motion, L should stay ~0
+    # The 1D input is embedded as a rigid rotation about the centre of mass
+    # (Decisions.md ADR-008), so L is a constant physical rotational value
+    # (≈ 0.707 here), not zero. H1 requires it to stay bounded (threshold unchanged).
     assert L_max < 1.0, f"H1 failed: L grew to {L_max}"
 
     # Check virial ratio is finite (not the main test, just sanity)
