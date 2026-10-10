@@ -1,18 +1,18 @@
 # Limitations
 
-## محدودیت‌های بنیادین
+## Foundational Limitations
 
-1. **کوری به اخبار**: سیستم فقط L2 می‌بیند.
-2. **عدم آگاهی از رژیم کلان**: هیچ مکانیزم ماکرو ندارد.
-3. **حساسیت به گپ**: در گپ بدون حجم، فریز می‌شود.
-4. **عدم قابلیت multi-venue**: تک‌صرافی در MVP.
-5. **محدودیت خطی‌سازی**: گرانش نیوتنی برای فاصله‌های بزرگ نادرست.
-6. **عدم مدل‌سازی همبستگی منفی**: فقط جاذبه داریم، نه دافعه.
-7. **عدم اثر حجم خودمان**: اگر اجرا شود، بازار را تغییر می‌دهد.
+1. **News Blindness**: System only sees L2.
+2. **No Macro Awareness**: No macro mechanism.
+3. **Gap Sensitivity**: Freezes on volume-less gaps.
+4. **No Multi-Venue**: Single-exchange in MVP.
+5. **Linearization Limit**: Newtonian gravity inaccurate at large distances.
+6. **No Negative Correlation Modeling**: Only attraction, no repulsion.
+7. **No Self-Impact**: If executed, changes market.
 
-## چه چیزهایی سیستم نمی‌تواند ببیند
-- اخبار
-- تراکنش‌های on-chain
-- جریان‌های OTC
-- رفتار نهنگ‌ها در صرافی‌های دیگر
-- تصمیمات فدرال
+## What the System Cannot See
+- News
+- On-chain transactions
+- OTC flows
+- Whale behavior on other exchanges
+- Federal decisions

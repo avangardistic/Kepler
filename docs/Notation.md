@@ -1,36 +1,36 @@
 # Notation
 
-## نمادها
+## Symbols
 
-| نماد | تعریف | واحد |
+| Symbol | Definition | Unit |
 |------|--------|------|
-| $i, j$ | اندیس ارز (1,2,3) | — |
-| $t$ | شماره tick | — |
-| $P_i$ | قیمت ارز i | USDT |
-| $P_i^\mu$ | میکروپریس | USDT |
-| $x_i$ | لگاریتم میکروپریس | — |
-| $v_i$ | سرعت مداری | ۱/tick |
-| $p_i$ | مومنتوم | — |
-| $m_i$ | جرم مؤثر | — |
-| $I_i$ | عدم توازن | — |
-| $\gamma_i$ | اصطکاک | — |
-| $q_k^{b,i}$ | حجم bid سطح k | — |
-| $q_k^{a,i}$ | حجم ask سطح k | — |
-| $G$ | ثابت گرانش | 1.0 |
-| $\vec L$ | مومنتوم زاویه‌ای | — |
-| $\Pi$ | سود تجمعی | — |
-| $\phi_{ij}$ | قید هج | — |
-| $\lambda_i$ | ضریب لاگرانژ | — |
-| $T$ | انرژی جنبشی | — |
-| $V$ | انرژی پتانسیل | — |
-| $\mathcal{V}$ | نسبت ویریال | — |
+| $i, j$ | Asset index (1,2,3) | — |
+| $t$ | Tick number | — |
+| $P_i$ | Price of asset i | USDT |
+| $P_i^\mu$ | Microprice | USDT |
+| $x_i$ | Log microprice | — |
+| $v_i$ | Orbital velocity | 1/tick |
+| $p_i$ | Momentum | — |
+| $m_i$ | Effective mass | — |
+| $I_i$ | Imbalance | — |
+| $\gamma_i$ | Friction | — |
+| $q_k^{b,i}$ | Bid depth at level k | — |
+| $q_k^{a,i}$ | Ask depth at level k | — |
+| $G$ | Gravitational constant | 1.0 |
+| $\vec L$ | Angular momentum | — |
+| $\Pi$ | Cumulative profit | — |
+| $\phi_{ij}$ | Hedge constraint | — |
+| $\lambda_i$ | Lagrange multiplier | — |
+| $T$ | Kinetic energy | — |
+| $V$ | Potential energy | — |
+| $\mathcal{V}$ | Virial ratio | — |
 
-## عملگرها
-- $\dot x = dx/dt$ مشتق نسبت به tick
-- $\nabla_i$ گرادیان نسبت به $x_i$
-- $\langle \cdot \rangle$ میانگین زمانی
-- $\|\cdot\|$ نرم اقلیدسی
+## Operators
+- $\dot x = dx/dt$ derivative w.r.t. tick
+- $\nabla_i$ gradient w.r.t. $x_i$
+- $\langle \cdot \rangle$ time average
+- $\|\cdot\|$ Euclidean norm
 
-## اندیس‌ها
-- بالا: نوع (b=bid, a=ask, eff=effective)
-- پایین: مختصات (i=ارز, k=سطح)
+## Indices
+- Superscript: type (b=bid, a=ask, eff=effective)
+- Subscript: coordinate (i=asset, k=level)

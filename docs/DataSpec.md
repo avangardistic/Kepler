@@ -1,8 +1,8 @@
 # DataSpec
 
-## اسکیمای L2
+## L2 Schema
 
-### پیام Binance (`depth20@100ms`)
+### Binance Message (`depth20@100ms`)
 ```json
 {
   "stream": "btcusdt@depth20@100ms",
@@ -14,24 +14,24 @@
 }
 ```
 
-## فیلدهای نرمال‌شده
-| فیلد | نوع | توضیح |
+## Normalized Fields
+| Field | Type | Description |
 |------|-----|-------|
 | symbol | str | BTCUSDT |
-| bids | list[[float, float]] | ۲۰ سطح |
-| asks | list[[float, float]] | ۲۰ سطح |
-| ts_exchange | int ns | زمان صرافی |
-| ts_local | int ns | زمان دریافت |
+| bids | list[[float, float]] | 20 levels |
+| asks | list[[float, float]] | 20 levels |
+| ts_exchange | int ns | Exchange time |
+| ts_local | int ns | Receive time |
 | seq | int | lastUpdateId |
 
-## ذخیره‌سازی
-- فرمت: Parquet
-- فشرده‌سازی: zstd
-- پارتیشن: symbol / day
-- اندازه تخمینی: ۱ GB برای ۱۰M tick
+## Storage
+- Format: Parquet
+- Compression: zstd
+- Partition: symbol / day
+- Estimated size: 1 GB for 10M ticks
 
-## اعتبارسنجی
+## Validation
 - bids strictly descending
 - asks strictly ascending
 - best_bid < best_ask
-- همه حجم‌ها > 0
+- All volumes > 0

@@ -54,4 +54,4 @@
 - Self-induced gravity formula documented in Physics.md
 - Missing files created
 
-**Next:** Continue with Phase 0.3 (virial test fix)
+**Next:** 

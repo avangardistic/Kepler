@@ -1,39 +1,39 @@
 # Experiments
 
-## E1 — شبیه‌سازی ۱۰ میلیون tick
-**هدف:** تست H1, H2, H3.
-**داده:** Binance BTC/ETH/SOL.
-**معیار:** $\Pi > 0$ با CI 95%.
+## E1 — 10 Million Tick Simulation
+**Goal:** Test H1, H2, H3.
+**Data:** Binance BTC/ETH/SOL.
+**Criterion:** $\Pi > 0$ with 95% CI.
 
-## E2 — ده حالت L2
-**هدف:** تست H6.
-**داده:** داده ساختگی کنترل‌شده.
-**معیار:** پاسخ صحیح در ≥8 حالت.
+## E2 — Ten L2 States
+**Goal:** Test H6.
+**Data:** Controlled synthetic data.
+**Criterion:** Correct response in ≥8 states.
 
-## E3 — آزمون شکست
-**هدف:** تست H5.
-**داده:** گپ‌های تاریخی.
-**معیار:** بازگشت در <10 tick.
+## E3 — Failure Test
+**Goal:** Test H5.
+**Data:** Historical gaps.
+**Criterion:** Recovery in <10 ticks.
 
-## E4 — آزمون پایستگی
-**هدف:** تست H7.
-**داده:** ۱۰۰٬۰۰۰ tick.
-**معیار:** $\|\phi\| < 10^{-6}$.
+## E4 — Conservation Test
+**Goal:** Test H7.
+**Data:** 100,000 ticks.
+**Criterion:** $\|\phi\| < 10^{-6}$.
 
-## E5 — مقایسه با A-S کلاسیک
-**هدف:** برتری نگاشت هندسی.
-**داده:** همان داده.
-**معیار:** Sharpe بالاتر.
+## E5 — Comparison with Classical A-S
+**Goal:** Superiority of geometric mapping.
+**Data:** Same data.
+**Criterion:** Higher Sharpe.
 
-## E6 — آزمون Cross-timeframe
-**هدف:** سازگاری در 1m, 5m, 1h.
-**معیار:** همبستگی مدار > 0.7.
+## E6 — Cross-Timeframe Test
+**Goal:** Compatibility at 1m, 5m, 1h.
+**Criterion:** Orbit correlation > 0.7.
 
-## E7 — آزمون چندجهانی
-**هدف:** سه تایم‌فریم موازی.
-**معیار:** همگام‌سازی بدون واگرایی.
+## E7 — Multidimensional Test
+**Goal:** Three parallel timeframes.
+**Criterion:** Synchronization without divergence.
 
-## طرح آماری
-- t-test زوجی
-- Bootstrap ۱۰٬۰۰۰ نمونه
-- تصحیح بنفرونی $\alpha/n$
+## Statistical Design
+- Paired t-test
+- Bootstrap 10,000 samples
+- Bonferroni correction $\alpha/n$

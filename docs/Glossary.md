@@ -1,29 +1,29 @@
 # Glossary
 
-**Tick**: کوچک‌ترین واحد زمان. یک به‌روزرسانی L2.
+**Tick**: Smallest time unit. One L2 update.
 
-**Level 2 (L2)**: دفتر سفارش با عمق چند سطح.
+**Level 2 (L2)**: Order book with multiple depth levels.
 
-**Microprice**: میانگین وزنی best bid/ask با حجم.
+**Microprice**: Volume-weighted average of best bid/ask.
 
-**Imbalance**: تفاضل نرمالیزه bid/ask depth.
+**Imbalance**: Normalized bid/ask depth difference.
 
-**Iceberg**: سفارش پنهان که به‌صورت مکرر پر می‌شود.
+**Iceberg**: Hidden order that replenishes repeatedly.
 
-**Spoof**: سفارش بزرگ کاذب که بدون اجرا ناپدید می‌شود.
+**Spoof**: Large fake order that disappears without execution.
 
-**Orbit**: مسیر سه جسم در فضای $(\ln P, m, I)$.
+**Orbit**: Trajectory of three bodies in $(\ln P, m, I)$ space.
 
-**Angular Momentum ($\vec L$)**: اندازه چرخش مدار.
+**Angular Momentum ($\vec L$)**: Measure of orbital rotation.
 
-**Virial Ratio**: نسبت T/V که به -1/2 میل می‌کند.
+**Virial Ratio**: Ratio T/V that tends toward -1/2.
 
-**Symplectic**: انتگرال‌گیر حفظ‌کننده انرژی.
+**Symplectic**: Energy-preserving integrator.
 
-**Hedge Constraint**: قید نسبت جرم بین سه ارز.
+**Hedge Constraint**: Mass ratio constraint between three assets.
 
-**Effective Mass**: جرم تصحیح‌شده با iceberg/spoof.
+**Effective Mass**: Mass corrected for iceberg/spoof.
 
-**Spoof Score**: امتیاز kاذب بودن یک سطح.
+**Spoof Score**: Score of how fake a level is.
 
-**Iceberg Score**: امتیاز پنهان بودن یک سطح.
+**Iceberg Score**: Score of how hidden a level is.

@@ -1,12 +1,12 @@
 # Implementation
 
-## 1. معماری
+## 1. Architecture
 ```
 L2 WebSocket → Fast Client → Detectors → Physics → MM → Grid → Simulator
 ```
 
-## 2. پشته فناوری
-| لایه | کتابخانه |
+## 2. Technology Stack
+| Layer | Library |
 |------|----------|
 | Loop | uvloop |
 | WS | websockets |
@@ -15,7 +15,7 @@ L2 WebSocket → Fast Client → Detectors → Physics → MM → Grid → Simul
 | Detectors | numba |
 | Buffer | polars |
 
-## 3. ساختار پوشه
+## 3. Folder Structure
 ```
 three-body-hft/
 ├── docs/
@@ -24,7 +24,7 @@ three-body-hft/
 └── requirements.txt
 ```
 
-## 4. جریان tick
+## 4. Tick Flow
 ```python
 while running:
     frames = client.pop_batch(512)
@@ -39,13 +39,13 @@ while running:
     grid = place_grid(quotes, books)
 ```
 
-## 5. ضد-الگوها
-❌ time.sleep در hot path
-❌ pandas در hot path
+## 5. Anti-Patterns
+❌ time.sleep in hot path
+❌ pandas in hot path
 ❌ threading.Lock
-❌ حافظه unbounded
+❌ Unbounded memory
 
-## 6. تست
+## 6. Testing
 - Unit: physics, detectors, mm
 - Property: L, Π, bid < ask
-- Integration: ۱ ساعت زنده
+- Integration: 1 hour live

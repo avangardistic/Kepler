@@ -1,58 +1,60 @@
 # Philosophy
 
-## 1. ماهیت پروژه
-این پروژه یک **بازی ریاضی** است، نه یک سیستم معاملاتی.
-هدف: آزمون اینکه آیا هندسه سه‌جسمی می‌تواند زبان توصیفی میکروساختار بازار در سطح tick باشد.
+## 1. Nature of the Project
+This project is a **mathematical game**, not a trading system.
+Goal: test whether three-body geometry can be a descriptive language for
+market microstructure at the tick level.
 
-**هرگز اجرا نخواهد شد.** هیچ سرمایه‌ای درگیر نیست. هیچ ادعای سودی وجود ندارد.
+**It will never be executed.** No capital is at stake. No profit claims.
 
-## 2. اصول بنیادین
+## 2. Foundational Principles
 
-### 2.1 هیچ اندیکاتوری مجاز نیست
-اندیکاتورها گذشته را فشرده می‌کنند و اطلاعات را از بین می‌برند.
-سیستم فقط با داده خام L2 و tick کار می‌کند.
+### 2.1 No Indicators Allowed
+Indicators compress the past and destroy information.
+The system works only with raw L2 data and ticks.
 
-### 2.2 هیچ فیلتری مجاز نیست
-مدار خودش فیلتر است. گرانش خودش اندیکاتور است.
+### 2.2 No Filters Allowed
+The orbit itself is the filter. Gravity itself is the indicator.
 
-### 2.3 هیچ مدیریت ریسکی وجود ندارد
-مدیریت ریسک = اعتراف به اینکه مدل اشتباه است.
-اگر هندسه درست باشد، ریسک در قید مدار حل می‌شود.
+### 2.3 No Risk Management
+Risk management = admitting the model is wrong.
+If the geometry is correct, risk is solved by the orbital constraint.
 
-### 2.4 زمان کوانتیده است
-واحد زمان = **یک tick**.
+### 2.4 Time is Quantized
+Time unit = **one tick**.
 
-### 2.5 بازار یک میدان است، نه یک سری
-قیمت یک نقطه در فضا نیست؛ جسم غوطه‌ور در میدان پتانسیل دفتر سفارش است.
+### 2.5 The Market is a Field, Not a Series
+Price is not a point in space; a body is immersed in the potential field
+of the order book.
 
-## 3. اصل تطبیق خودزا
-> سیستم باید بدون هیچ پارامتر بیرونی، خودش را با هر رژیم بازار تطبیق دهد.
+## 3. Self-Adaptation Principle
+> The system must adapt to any market regime without external parameters.
 
-| پارامتر | منبع درونی |
+| Parameter | Internal Source |
 |---------|-----------|
-| جرم | عمق L2 |
-| فاصله | اختلاف میکروپریس |
-| نیرو | عدم توازن bid/ask |
-| اصطکاک | اسپرد |
-| گرید | شعاع انحنا |
-| هج | نسبت جرم |
-| زمان | tick |
+| Mass | L2 depth |
+| Distance | Microprice difference |
+| Force | Bid/ask imbalance |
+| Friction | Spread |
+| Grid | Curvature radius |
+| Hedge | Mass ratio |
+| Time | Tick |
 
-## 4. ماهیت بازی
-- آیا سه جسم در میدان L2 مدار پایدار دارند؟
-- آیا مومنتوم زاویه‌ای کران‌دار است؟
-- آیا نسبت ویریال به -1/2 میل می‌کند؟
-- آیا سود = انحنای مدار؟
+## 4. Nature of the Game
+- Do three bodies in the L2 field have stable orbits?
+- Is angular momentum bounded?
+- Does the virial ratio tend toward -1/2?
+- Is profit = orbital curvature?
 
-## 5. ضد-اصول
-- ❌ ربات معامله‌گر
-- ❌ سیستم سیگنال‌دهی
-- ❌ استراتژی قابل فروش
-- ❌ مدل پیش‌بینی قیمت
-- ✅ یک بازی ریاضی روی داده واقعی
+## 5. Anti-Principles
+- ❌ Trading robot
+- ❌ Signal system
+- ❌ Sellable strategy
+- ❌ Price prediction model
+- ✅ A mathematical game on real data
 
-## 6. اصل falsifiability
-سیستم در سه حالت شکست می‌خورد:
-1. گپ ناگهانی بدون حجم
-2. L2 خالی (jump-to-zero depth)
-3. درهم‌تنیدگی خارجی (اخبار کلان)
+## 6. Falsifiability Principle
+The system fails in three states:
+1. Sudden gap without volume
+2. Empty L2 (jump-to-zero depth)
+3. External disruption (major news)

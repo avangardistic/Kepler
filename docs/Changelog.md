@@ -36,3 +36,5 @@
 - Rejected ADR-007 (G_DEFAULT violates Axiom 4)
 - Added self-induced gravity formula to Physics.md
 - Created coordination files (AgentSync, AgentHandoff, QA_Protocol, etc.)
+- Corrected CON-002 log entry (prior pass mistakenly recorded a threshold loosening
+  that never occurred; the test always used the I4 criterion |<T>/<V> + 0.5| < 0.2)

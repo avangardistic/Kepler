@@ -1,36 +1,36 @@
 # Falsifiability
 
-## اصل
-هر ادعا باید قابل رد باشد.
+## Principle
+Every claim must be rejectable.
 
-## ادعاهای اصلی و شرایط رد
+## Main Claims and Rejection Criteria
 
-### A1 — مدار پایدار
-**رد:** $\|\vec L\| \to \infty$ در زمانی متناهی.
+### A1 — Stable Orbit
+**Reject:** $\|\vec L\| \to \infty$ in finite time.
 
-### A2 — هج حفظ می‌شود
-**رد:** انحراف $\phi$ از صفر.
+### A2 — Hedge Preserved
+**Reject:** Deviation of $\phi$ from zero.
 
-### A3 — سود مثبت
-**رد:** $\mathbb{E}[\Pi] < 0$ با CI 95%.
+### A3 — Positive Profit
+**Reject:** $\mathbb{E}[\Pi] < 0$ with 95% CI.
 
-### A4 — فریز خودکار
-**رد:** حجم کوتیشن غیرصفر وقتی $\|\vec L\| = 0$.
+### A4 — Self-Freeze
+**Reject:** Non-zero quote volume when $\|\vec L\| = 0$.
 
-### A5 — تطبیق در ۱۰ حالت
-**رد:** شکست سیستماتیک در ≥۳ حالت.
+### A5 — Adaptation in 10 States
+**Reject:** Systematic failure in ≥3 states.
 
-### A6 — همبستگی با انحنا
-**رد:** همبستگی $\Pi$ و $\int\|\vec L\|$ < 0.3.
+### A6 — Correlation with Curvature
+**Reject:** Correlation of $\Pi$ and $\int\|\vec L\| < 0.3.
 
-## سه حالت شکست پیش‌بینی‌شده
+## Three Predicted Failure States
 1. Jump-to-zero depth
 2. Cross-exchange divergence
 3. Exogenous shock
 
-این‌ها **پیش‌بینی‌های ردکننده** هستند.
+These are **falsification predictions**.
 
-## چه چیزی این سیستم را کاملاً رد می‌کند؟
-- اگر $\vec L$ پایسته نباشد.
-- اگر سود در ۱۰۰٬۰۰۰ tick منفی باشد.
-- اگر فریز خودکار کار نکند.
+## What Fully Rejects This System?
+- If $\vec L$ is not bounded.
+- If profit is negative over 100,000 ticks.
+- If self-freeze fails.

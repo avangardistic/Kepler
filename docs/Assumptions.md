@@ -1,17 +1,17 @@
 # Assumptions
 
-## فرض‌های صریح
+## Explicit Assumptions
 
-1. **پیوستگی L2**: دفتر همیشه حداقل ۲۰ سطح دارد.
-2. **عدم تاخیر شبکه**: تأخیر < ۵ms (در شبیه‌سازی صفر).
-3. **عدم همبستگی خارجی**: تنها سه ارز مورد بررسی.
-4. **عدم دستکاری کلان**: بدون دخالت بانک مرکزی.
-5. **میکروپریس معتبر**: بازتاب واقعی فشار خرید/فروش.
-6. **عدم گپ اطلاعاتی**: هر tick در دسترس است.
-7. **ثبات کارمزد**: کارمزد ثابت در طول اجرا.
-8. **عدم محدودیت پوزیشن**: capacity بی‌نهایت.
-9. **عدم اثر بازار**: کوتیشن‌ها قیمت را تغییر نمی‌دهند.
-10. **عدم ورشکستگی صرافی**: ریسک طرف مقابل صفر.
+1. **L2 Continuity**: Book always has at least 20 levels.
+2. **No Network Latency**: Latency < 5ms (zero in simulation).
+3. **No External Correlation**: Only three assets under study.
+4. **No Large Manipulation**: No central bank intervention.
+5. **Valid Microprice**: Reflects real buy/sell pressure.
+6. **No Information Gap**: Every tick is available.
+7. **Fee Stability**: Fee constant throughout execution.
+8. **No Position Limit**: Infinite capacity.
+9. **No Market Impact**: Quotes don't change price.
+10. **No Exchange Insolvency**: Counterparty risk zero.
 
-## مرزهای اعتبار
-خارج از این فرض‌ها، مدل اعتبار ندارد.
+## Validity Boundaries
+Outside these assumptions, the model is invalid.

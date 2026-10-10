@@ -1,8 +1,8 @@
 # Symplectic Integration
 
-## 1. چرا symplectic؟
-انتگرال‌گیرهای معمولی (Euler, RK4) انرژی را به‌مرور از دست می‌دهند.
-Symplectic ساختار هندسی را حفظ می‌کند.
+## 1. Why Symplectic?
+Ordinary integrators (Euler, RK4) lose energy over time.
+Symplectic preserves the geometric structure.
 
 ## 2. Störmer-Verlet
 $$
@@ -13,28 +13,28 @@ p^{n+1}   &= p^{n+1/2} - \tfrac{\Delta t}{2}\nabla V(x^{n+1})
 \end{aligned}
 $$
 
-## 3. خاصیت
-- حفظ $E$ تا $O(\Delta t^2)$
-- حفظ $\vec L$ تا دقت ماشین
-- برگشت‌پذیر زمانی
+## 3. Properties
+- Preserves $E$ to $O(\Delta t^2)$
+- Preserves $\vec L$ to machine precision
+- Time-reversible
 
-## 4. تصویر روی منیفلد قید
-پس از هر گام:
+## 4. Constraint Manifold Projection
+After each step:
 $$
 (x, p) \leftarrow \text{Proj}_\Sigma(x, p)
 $$
 
-که $\Sigma = \phi^{-1}(0)$.
+where $\Sigma = \phi^{-1}(0)$.
 
-## 5. خطا
+## 5. Error
 $$
 \Delta E \sim \Delta t^2 \cdot N_\text{tick}
 $$
 
-## 6. مقایسه
-| روش | پایستگی |
-|------|----------|
-| Euler | بد |
-| RK4 | متوسط |
-| Symplectic | عالی |
-| IMEX | عالی + قید |
+## 6. Comparison
+| Method | Conservation |
+|--------|----------|
+| Euler | Poor |
+| RK4 | Medium |
+| Symplectic | Excellent |
+| IMEX | Excellent + constraints |

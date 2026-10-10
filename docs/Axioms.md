@@ -1,31 +1,31 @@
 # Axioms
 
-## اصل ۱ — واقعیت خام
-تنها داده مجاز: L2 tick. هیچ داده مشتق‌شده.
+## Axiom 1 — Raw Reality
+Only allowed data: L2 tick. No derived data.
 
-## اصل ۲ — کوانتش زمان
-زمان گسسته است. واحد = tick.
+## Axiom 2 — Time Quantization
+Time is discrete. Unit = tick.
 
-## اصل ۳ — جرم از حجم
-$m_i = \ln(1 + D_i)$ تنها منبع جرم.
+## Axiom 3 — Mass from Volume
+$m_i = \ln(1 + D_i)$ is the only source of mass.
 
-## اصل ۴ — گرانش خودزا
-$\kappa_{ij} \propto m_i m_j / d^2$ بدون پارامتر آزاد.
+## Axiom 4 — Self-Induced Gravity
+$\kappa_{ij} \propto m_i m_j / d^2$ without free parameters.
 
-## اصل ۵ — قید هج
-هج از نسبت جرم، نه از تصمیم.
+## Axiom 5 — Hedge Constraint
+Hedge from mass ratio, not from decision.
 
-## اصل ۶ — بدون مدیریت ریسک
-ریسک در هندسه حل شده.
+## Axiom 6 — No Risk Management
+Risk is solved in geometry.
 
-## اصل ۷ — سود = کار
+## Axiom 7 — Profit = Work
 $\Pi = \oint p \cdot dx$.
 
-## اصل ۸ — پایداری ویریال
-سیستم به $T/V = -1/2$ میل می‌کند.
+## Axiom 8 — Virial Stability
+System tends toward $T/V = -1/2$.
 
-## اصل ۹ — رد‌پذیری
-هر فرضیه معیار رد دارد.
+## Axiom 9 — Falsifiability
+Every hypothesis has a rejection criterion.
 
-## اصل ۱۰ — عدم اجرا
-این پروژه هرگز معامله نمی‌کند.
+## Axiom 10 — No Execution
+This project never trades.

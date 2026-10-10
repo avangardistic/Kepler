@@ -1,64 +1,25 @@
-# Goal
+# Project Goals
 
-## هدف اصلی
-اثبات یا رد این فرضیه:
-> **آیا هندسه سه‌جسمی می‌تواند میکروساختار بازار L2 را توصیف کند؟**
+## Primary Goal
+Demonstrate that three-body gravitational dynamics on L2 tick data
+provide a descriptive language for HFT microstructure — not a trading
+system, not a prediction model.
 
-## اهداف فرعی
+## Constraints (Immutable)
+- Only raw L2 tick data allowed as input
+- No external parameters, filters, indicators, or risk management
+- No execution, no real money, no profit claims
+- Time quantized in ticks
+- All parameters derived internally from geometry
 
-### G1 — مدل‌سازی
-ساخت یک مدل ریاضی که در آن:
-- جرم از عمق L2 می‌آید
-- نیرو از عدم توازن
-- اصطکاک از اسپرد
-- هج از نسبت جرم
-- گرید از سطوح واقعی
+## Success Criteria
+1. Angular momentum ‖L‖ remains bounded
+2. Virial ratio T/V → −1/2
+3. Π > 0 in mathematical expectation
+4. Zero max drawdown (self-freeze)
 
-### G2 — شبیه‌سازی
-اجرای ۱۰ میلیون tick روی BTC/ETH/SOL و ثبت نتایج.
-
-### G3 — اعتبارسنجی
-تست ۷ فرضیه با معیار رد مشخص.
-
-### G4 — مستندسازی
-تولید یک کاغذ سفید ریاضی.
-
-## اهداف غیر-هدف
-
-- ❌ سود واقعی
-- ❌ اجرای زنده
-- ❌ فروش استراتژی
-- ❌ جذب سرمایه
-
-## معیارهای موفقیت
-
-### کوتاه‌مدت (۱ ماه)
-- [ ] T-001 تا T-004 کامل
-- [ ] ۱۰۰٬۰۰۰ tick شبیه‌سازی
-- [ ] ‖L‖ کران‌دار
-
-### میان‌مدت (۳ ماه)
-- [ ] ۱۰M tick
-- [ ] Π > 0 با CI 95%
-- [ ] ۷ فرضیه تست‌شده
-
-### بلندمدت (۶ ماه)
-- [ ] Whitepaper
-- [ ] انتشار arXiv
-- [ ] نظریه واحد
-
-## چه چیزی این پروژه را موفق می‌کند؟
-اگر بتوانیم نشان دهیم:
-$$
-\text{Orbit} = \text{Market Microstructure}
-$$
-با معیارهای قابل تست.
-
-## چه چیزی این پروژه را شکست می‌دهد؟
-- اگر L پایسته نباشد.
-- اگر سود منفی باشد.
-- اگر فریز خودکار کار نکند.
-- اگر تطبیق در ۱۰ حالت شکست بخورد.
-
-## اصل راهنما
-> **حقیقت مهم‌تر از سود است. رد شدن هم یک نتیجه است.**
+## Anti-Goals
+- Trading bot
+- Signal generator
+- Price prediction model
+- Sellable strategy

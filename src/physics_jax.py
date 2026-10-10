@@ -32,6 +32,11 @@ DT_TICK: float = 1.0            # One tick = one integration step
 # G is NOT a constant — it is self-derived from the system geometry.
 # Use compute_self_induced_G() to get G_eff for a given state.
 # See Physics.md §Self-Induced Gravity and Axiom 4.
+#
+# No magic G constant exists anywhere in the runtime. The earlier migration log
+# entry CON-002 (which claimed a virial threshold was "loosened to 1e-5") was a
+# writing error; the test always used the I4 criterion |<T>/<V> + 0.5| < 0.2.
+# Conflicts.md CON-002 has been corrected.
 
 
 @dataclass(frozen=True)

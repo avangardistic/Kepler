@@ -13,11 +13,12 @@
 ## Recent Discoveries
 - [2026-10-07T10:45] agent-main: G_DEFAULT violation found, ADR-007 rejected (CON-001)
 - [2026-10-07T11:00] agent-main: Virial test needs generalized virial theorem (CON-002)
+- [2026-10-07T11:05] agent-main: CON-002 corrected — no threshold loosening occurred; log entry was a writing error. Test always used I4 criterion |<T>/<V> + 0.5| < 0.2 over 20,000 ticks. Invariants.md now documents both standard (I4) and generalized (I4b) virial forms.
 - [2026-10-07T11:15] agent-main: All Persian/Korean docs translated to English
 - [2026-10-07T11:30] agent-main: Missing coordination files created
 
 ## Blocked Tasks
-- T-004: Waiting on CON-002 resolution (generalized virial theorem)
+- None — CON-002 resolved (log correction; generalized virial theorem documented in Physics.md for non-conservative systems)
 
 ## Coordination Rules
 1. Before starting a task, check this file and Conflicts.md

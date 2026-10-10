@@ -1,66 +1,66 @@
 # Prompt Library
 
-## پرامپت‌های استاندارد
+## Standard Prompts
 
-### P1 — برداشتن وظیفه
+### P1 — Take Next Task
 ```
-وظیفه بعدی را از TaskQueue.md بردار.
-فاز فعلی و وابستگی‌ها را چک کن.
-اگر همه پیش‌نیازها برآورده شده، شروع کن.
-در ResearchLog.md گزارش بده.
-```
-
-### P2 — تست فرضیه
-```
-Hypotheses.md را بخوان.
-یک فرضیه قابل رد انتخاب کن.
-Experiment مربوطه را در Experiments.md طراحی کن.
-کد تست بنویس در tests/.
-نتیجه را در ResearchLog.md ثبت کن.
-اگر رد شد، در FailureModes.md اضافه کن.
+Take the next task from TaskQueue.md.
+Check current phase and dependencies.
+If all prerequisites are met, start.
+Report in ResearchLog.md.
 ```
 
-### P3 — افزودن فاز جدید
+### P2 — Test Hypothesis
 ```
-roadmap.md را بخوان.
-فاز بعدی را بردار.
-پیش‌نیازها را چک کن.
-یک وظیفه در TaskQueue.md اضافه کن.
-```
-
-### P4 — بررسی تعارض
-```
-همه فایل‌های docs/ را اسکن کن.
-هر تناقض را در Conflicts.md ثبت کن.
-پیشنهاد حل بده.
+Read Hypotheses.md.
+Pick one falsifiable hypothesis.
+Design the corresponding experiment from Experiments.md.
+Write test code in tests/.
+Record result in ResearchLog.md.
+If rejected, add to FailureModes.md.
 ```
 
-### P5 — بررسی ناورداها
+### P3 — Add New Phase
 ```
-Invariants.md را بخوان.
-هر ناوردا را با کد تست کن.
-اگر شکست خورد، علت را در FailureModes.md بنویس.
-```
-
-### P6 — بهینه‌سازی
-```
-hot path ها را پیدا کن (profiling).
-اگر کند است، از numba/JAX استفاده کن.
-بدون تغییر در رفتار، فقط سرعت.
+Read roadmap.md.
+Take the next phase.
+Check prerequisites.
+Add a task to TaskQueue.md.
 ```
 
-### P7 — بسط ریاضی
+### P4 — Check Conflicts
 ```
-OpenProblems.md را بخوان.
-یک مسئله انتخاب کن.
-بسط ریاضی بده.
-اگر ثابت شد، به Concept.md اضافه کن.
-اگر رد شد، در FailureModes.md ثبت کن.
+Scan all files in docs/.
+Log each conflict in Conflicts.md.
+Propose resolution.
 ```
 
-### P8 — بازبینی
+### P5 — Check Invariants
 ```
-آخرین تغییرات را از Changelog.md بخوان.
-آیا با Philosophy.md سازگارند؟
-اگر نه، در Conflicts.md ثبت کن.
+Read Invariants.md.
+Test each invariant with code.
+If failed, write cause in FailureModes.md.
+```
+
+### P6 — Optimization
+```
+Find hot paths (profiling).
+If slow, use numba/JAX.
+No behavior change, only speed.
+```
+
+### P7 — Mathematical Extension
+```
+Read OpenProblems.md.
+Pick one problem.
+Give mathematical extension.
+If proven, add to Concept.md.
+If rejected, record in FailureModes.md.
+```
+
+### P8 — Review
+```
+Read recent changes from Changelog.md.
+Are they compatible with Philosophy.md?
+If not, log in Conflicts.md.
 ```

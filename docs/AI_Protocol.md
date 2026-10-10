@@ -1,54 +1,17 @@
-# AI Research Protocol
+# AI Protocol
 
-## هدف
-این فایل به AI می‌گوید چگونه در پروژه مشارکت کند.
+## Structure
+- LLM generates HFT research
+- Mathematical formalism only, no code unless validated
+- Documentation-first, code-second
 
-## قواعد تغییرناپذیر
-1. هیچ فیلتر، اندیکاتور، یا پارامتر بیرونی اضافه نکن.
-2. هیچ مدیریت ریسکی اضافه نکن.
-3. هر تغییر در `Decisions.md` ثبت شود.
-4. هر فرضیه جدید در `Hypotheses.md` با معیار رد.
-5. هر شکست در `FailureModes.md`.
+## Rules
+- Do not execute trading strategies
+- Do not use external parameters without documenting the violation
+- Every claim must have a rejection criterion
+- Maintain synchronization with other agents via Paperclip
 
-## وظایف AI
-1. فاز فعلی roadmap را از `TaskQueue.md` بخوان.
-2. یک وظیفه بردار.
-3. در `ResearchLog.md` گزارش بده.
-4. اگر تعارض دید، در `Conflicts.md` ثبت کن.
-5. اگر مسئله حل‌نشده دید، در `OpenProblems.md` اضافه کن.
-
-## خروجی مورد انتظار
-- کد در `src/`
-- تست در `tests/`
-- گزارش در `docs/`
-- داده در `data/`
-
-## ممنوعیت‌ها
-- تغییر در `Philosophy.md` (فقط انسان).
-- تغییر در `Axioms.md` (فقط انسان).
-- تغییر در این فایل (فقط انسان).
-- ادعای سود واقعی.
-- ادعای قابلیت اجرا.
-
-## چک‌لیست هر تغییر
-- [ ] آیا پارامتر بیرونی اضافه شد؟ (اگر بله، رد)
-- [ ] آیا فیلتر اضافه شد؟ (اگر بله، رد)
-- [ ] آیا در Decisions ثبت شد؟
-- [ ] آیا تست نوشته شد؟
-- [ ] آیا ناورداها حفظ شدند؟
-
-## پروتکل گزارش
-هر گزارش در `ResearchLog.md` با فرمت:
-```
-## [تاریخ] [فاز] [موضوع]
-**هدف:**
-**روش:**
-**نتیجه:**
-**گام بعد:**
-```
-
-## حالت شکست AI
-اگر AI قانونی را زیر پا گذاشت:
-1. در `Conflicts.md` ثبت شود.
-2. تغییر برگردانده شود.
-3. گزارش به انسان.
+## Coordination
+- Use Paperclip for inter-agent communication
+- Fallback: AgentSync.md for state handoff
+- All state changes logged in ResearchLog.md

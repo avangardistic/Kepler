@@ -1,29 +1,29 @@
 # Prior Art
 
-## مدل‌های فیزیکی بازار
-- **Econophysics** (Stanley, Mantegna): توزیع‌های توانی در بازده.
-- **Ising model** (Bornholdt): فاز انتقال در بازار.
-- **Coupled oscillators** (Sornette): نوسان‌های همگام.
+## Physical Models of Markets
+- **Econophysics** (Stanley, Mantegna): Power-law distributions in returns.
+- **Ising model** (Bornholdt): Phase transitions in markets.
+- **Coupled oscillators** (Sornette): Synchronous oscillations.
 
-## مدل‌های سه‌جسمی در مالی
-- **Triangular arbitrage** به‌عنوان سه‌جسمی (Zhou et al.)
-- **Cross-currency dynamics** با معادلات Lotka-Volterra.
+## Three-Body Models in Finance
+- **Triangular arbitrage** as three-body (Zhou et al.)
+- **Cross-currency dynamics** with Lotka-Volterra equations.
 - **Network triplets** (Aste).
 
-## Market Making مدرن
-- **A-S (2008)** با inventory risk.
-- **Guéant-Lehalle-Fernandez-Tapia (2013)** با محدودیت.
-- **Cartea-Jaimungal** با تابع ارزش.
+## Modern Market Making
+- **A-S (2008)** with inventory risk.
+- **Guéant-Lehalle-Fernandez-Tapia (2013)** with constraints.
+- **Cartea-Jaimungal** with value function.
 
-## تفاوت این پروژه
-1. ترکیب **سه‌جسمی + market making + L2**.
-2. **بدون مدیریت ریسک**: ریسک در قید هندسی.
-3. **بدون فیلتر**: تطبیق خودزا.
-4. **tick-based**: کوانتش زمان.
-5. **بازی ریاضی**: هرگز اجرا نمی‌شود.
+## Difference of This Project
+1. Combination of **three-body + market making + L2**.
+2. **No risk management**: Risk in geometric constraint.
+3. **No filter**: Self-adaptation.
+4. **Tick-based**: Time quantization.
+5. **Mathematical game**: Never executed.
 
-## چه چیز جدید است؟
-- نگاشت A-S به سه‌جسمی از طریق $\gamma = 1/\|\vec L\|$.
-- هج = نسبت جرم (نه تصمیم).
-- گرید = سطوح واقعی L2 (نه فاصله محاسباتی).
-- فریز خودکار در $\|\vec L\| = 0$.
+## What's New?
+- A-S mapping to three-body via $\gamma = 1/\|\vec L\|$.
+- Hedge = mass ratio (not decision).
+- Grid = actual L2 levels (not computational distance).
+- Self-freeze at $\|\vec L\| = 0$.

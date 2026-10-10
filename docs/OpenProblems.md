@@ -1,31 +1,31 @@
 # Open Problems
 
-## 1. جاذبه vs دافعه
-در همبستگی منفی، گرانش نیوتنی اشتباه است. مدل جدید لازم است.
+## 1. Attraction vs Repulsion
+In negative correlation, Newtonian gravity is incorrect. New model needed.
 
-## 2. علامت $\gamma$
-آیا $\gamma$ باید منفی شود در رژیم‌های خاص؟
+## 2. Sign of $\gamma$
+Should $\gamma$ become negative in certain regimes?
 
-## 3. درهم‌تنیدگی سه ارز
-آیا ارزها واقعاً درهم‌تنیده‌اند یا جدا؟
+## 3. Three-Asset Entanglement
+Are the assets truly entangled or independent?
 
-## 4. نقش اطلاعات
-آیا آنتروپی می‌تواند به‌عنوان پتانسیل اضافی عمل کند؟
+## 4. Role of Information
+Can entropy act as additional potential?
 
-## 5. حد $\hbar$
-آیا ثابت پلانک بازار قابل اندازه‌گیری است؟
+## 5. Limit $\hbar$
+Is there a measurable market Planck constant?
 
-## 6. چند صرافی
-آیا سه ارز در سه صرافی = ۹ جسم؟
+## 6. Multi-Exchange
+Three assets on three exchanges = 9 bodies?
 
-## 7. زمان کوانتیده
-آیا tick یک کوانتوم واقعی است یا فقط گسسته‌سازی؟
+## 7. Quantized Time
+Is tick a real quantum or just discretization?
 
-## 8. قضیه نوتر معکوس
-آیا هر ناوردا یک تقارن دارد؟
+## 8. Inverse Noether Theorem
+Does every symmetry have a conservation law?
 
-## 9. آستانه Chaos
-آیا بازار در رژیم chaos است؟
+## 9. Chaos Threshold
+Is the market in a chaotic regime?
 
-## 10. نظریه واحد
-آیا فیزیک + اطلاعات + هندسه یک کل را می‌سازند؟
+## 10. Unified Theory
+Do physics + information + geometry form a whole?

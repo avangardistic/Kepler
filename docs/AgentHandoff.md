@@ -37,6 +37,7 @@ Standardized protocol for transferring work between AI agents.
 ### 2. Check Conflicts.md
 - Review all open conflicts
 - Understand severity and proposed resolutions
+- Verify CON-002 is resolved (log correction; test always used I4 criterion |<T>/<V> + 0.5| < 0.2; no threshold loosening occurred)
 - Don't start work that requires conflict resolution without addressing it
 
 ### 3. Read Last 5 ResearchLog Entries

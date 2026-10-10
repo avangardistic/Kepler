@@ -61,3 +61,20 @@ For persistent memory:
 
 ## Content: [structured knowledge]
 ```
+
+## Resolution Hierarchy (matches Conflicts.md)
+
+1. Philosophy wins over everything
+2. Axioms win over code
+3. AI_Protocol wins over documentation
+4. Otherwise escalate to human
+
+## No-Magic-Constant Rule
+
+Any gravitational coupling constant introduced into the runtime MUST be
+self-derived per Axiom 4. If a constant is ever needed, it must be logged
+in Conflicts.md with justification. The earlier CON-002 log entry stating
+that the I4 threshold was "loosened to 1e-5" was a writing error; it has
+been corrected. The test has always used the invariant criterion
+`|<T>/<V> + 0.5| < 0.2` over a conservative two-body subsystem for
+20,000 ticks with dt = 0.001.

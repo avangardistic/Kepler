@@ -1,56 +1,56 @@
 # Roadmap
 
-> **اصل تغییرناپذیر:** هیچ مدیریت ریسکی، فیلتری، اندیکاتوری، پارامتر بیرونی.
+> **Immutable Principle:** No risk management, no filters, no indicators, no external parameters.
 
-## فاز 0: پایه نظری ✅
+## Phase 0: Theoretical Foundation ✅
 - Philosophy, Concept, Strategy, Implementation, Notation, Glossary
 
-## فاز 1: زیرساخت Tick
+## Phase 1: Tick Infrastructure
 - DataSpec, TickModel, fast_l2_client, tick_buffer, replay
-- معیار خروج: ۱۰۰٬۰۰۰ tick بدون افت
+- Exit criteria: 100,000 ticks without drop
 
-## فاز 2: فیزیک
+## Phase 2: Physics
 - Physics, physics_jax, Invariants
-- معیار خروج: ‖L‖ کران‌دار در ۹۰٪ زمان
+- Exit criteria: ‖L‖ bounded 90% of time
 
-## فاز 3: تشخیص‌ها
+## Phase 3: Detectors
 - Detectors, detectors_numba, K-S test
-- معیار خروج: F1 > 0.8
+- Exit criteria: F1 > 0.8
 
-## فاز 4: Market Making
+## Phase 4: Market Making
 - MarketMaking, market_maker
-- معیار خروج: اسپرد همیشه مثبت
+- Exit criteria: spread always positive
 
-## فاز 5: شبیه‌سازی
-- ۱۰ میلیون tick
-- معیار خروج: Π > 0 با CI 95%
+## Phase 5: Simulation
+- 10 million ticks
+- Exit criteria: Π > 0 with 95% CI
 
-## فاز 6: اعتبارسنجی
+## Phase 6: Validation
 - Hypotheses, Experiments, t-test, bootstrap
-- معیار خروج: رد/تأیید فرضیه اصلی
+- Exit criteria: reject/confirm main hypothesis
 
-## فاز 7: بسط ریاضی
-- هندسه دیفرانسیل، ریچی، گیج، کوانتش
+## Phase 7: Mathematical Extension
+- Differential geometry, Ricci, gauge, quantization
 
-## فاز 8: چندجهانی
-- JAX vmap روی ۳ تایم‌فریم
+## Phase 8: Multidimensional
+- JAX vmap on 3 time-frames
 
-## فاز 9: مستندسازی نهایی
+## Phase 9: Final Documentation
 - References, OpenProblems, whitepaper
 
-## فاز 10: نظریه واحد
+## Phase 10: Unified Theory
 - Orbit ↔ Profit ↔ Information
 
-## جدول زمانی
-| فاز | مدت |
-|-----|------|
+## Timeline
+| Phase | Duration |
+|-------|----------|
 | 0 | ✅ |
-| 1 | 2 هفته |
-| 2 | 3 هفته |
-| 3 | 2 هفته |
-| 4 | 2 هفته |
-| 5 | 4 هفته |
-| 6 | 2 هفته |
-| 7 | 6 هفته |
-| 8 | 3 هفته |
-| 9 | 2 هفته |
+| 1 | 2 weeks |
+| 2 | 3 weeks |
+| 3 | 2 weeks |
+| 4 | 2 weeks |
+| 5 | 4 weeks |
+| 6 | 2 weeks |
+| 7 | 6 weeks |
+| 8 | 3 weeks |
+| 9 | 2 weeks |

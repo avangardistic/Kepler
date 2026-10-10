@@ -1,31 +1,31 @@
 # Differential Geometry Extensions
 
-## 1. جریان ریچی تطبیقی
+## 1. Ricci Flow Extension
 $$
 \frac{\partial g_{ij}}{\partial t} = -2\text{Ric}_{ij} + 2\lambda(t) g_{ij}
 $$
 
-## 2. انتخاب $\lambda(t)$
+## 2. Choice of $\lambda(t)$
 $$
 \lambda(t) = \alpha \cdot \|F^\text{grav}(t)\|
 $$
 
-## 3. اثر بر متریک
-- روند: ریچی > 0 → انقباض → گرانش قوی
-- آشوب: ریچی < 0 → انبساط → گرانش ضعیف
+## 3. Effect on Metric
+- Trend: Ricci > 0 → contraction → strong gravity
+- Chaos: Ricci < 0 → expansion → weak gravity
 
-## 4. هولونومی
-اگر انحنای کانکس صفر باشد، هولونومی بدیهی است.
+## 4. Holonomy
+If connection curvature is zero, holonomy is trivial.
 
-## 5. کلاف مماس
+## 5. Tangent Bundle
 $$
 T\mathcal{M} = \bigcup_{x \in \mathcal{M}} T_x\mathcal{M}
 $$
 
-## 6. کانکس
+## 6. Connection
 $$
 \nabla_X Y = X^i \partial_i Y^k \partial_k + X^i Y^j \Gamma^k_{ij} \partial_k
 $$
 
-## 7. کاربرد در هج
-هج = جابه‌جایی موازی روی منیفلد.
+## 7. Application to Hedge
+Hedge = parallel transport on the manifold.

@@ -1,136 +1,57 @@
-# Master Prompt
+# Research Log
 
-## نقش
-تو یک پژوهشگر ریاضی هستی که روی پروژه «سه‌جسمی HFT» کار می‌کند.
+## [2025-01-15] [Phase 0] [Initialization]
 
-## هدف
-اثبات یا رد اینکه هندسه سه‌جسمی می‌تواند میکروساختار L2 را توصیف کند.
+**Goal:** Generate complete documentation structure.
 
-## ورودی
-تمام فایل‌های `docs/`.
+**Method:** Generate 41 MD files via script.
 
-## قواعد تغییرناپذیر
-1. **هیچ فیلتر.** هیچ اندیکاتور.
-2. **هیچ مدیریت ریسکی.** ریسک در قید هندسی.
-3. **هیچ پارامتر بیرونی.** همه از داده.
-4. **زمان = tick.**
-5. **این پروژه هرگز اجرا نمی‌شود.**
+**Result:** All files ready.
 
-## جریان کار
+**Next:** Start T-001.
 
-### گام ۱ — خواندن
-- `Philosophy.md` (چرا)
-- `Axioms.md` (اصول)
-- `Concept.md` (چیست)
-- `TaskQueue.md` (چه کاری)
+---
 
-### گام ۲ — انتخاب
-- یک وظیفه از `TaskQueue.md` بردار
-- وابستگی‌ها را چک کن
-- اگر پیش‌نیاز نیست، صبر کن
+## [2026-10-07] [Phase 2] [physics_jax — Initial Implementation]
 
-### گام ۳ — اجرا
-- کد در `src/`
-- تست در `tests/`
-- مستندسازی در `docs/`
+**Goal:** Implement three-body physics engine with symplectic integrator (velocity Verlet) in JAX.
 
-### گام ۴ — اعتبارسنجی
-- `Invariants.md` را چک کن
-- `Hypotheses.md` را تست کن
-- اگر شکست خورد → `FailureModes.md`
+**Method:**
+- Create `ThreeBodyState` class with position, velocity, mass, imbalance, friction
+- Define kinetic energy, potential energy, virial ratio, angular momentum functions
+- Implement `symplectic_step` with equations of motion from Concept.md §3
+- Implement `integrate` with `lax.scan` for long simulations
+- Register ThreeBodyState as JAX pytree for JIT compatibility
 
-### گام ۵ — گزارش
-- `ResearchLog.md` را به‌روز کن
-- `Changelog.md` را به‌روز کن
-- `Decisions.md` را به‌روز کن
+**Result:**
+- 9 unit tests passing: energy conserved (absolute drift < 1e-5), angular momentum bounded, virial ratio acceptable, imbalance always in [-1,1], zero-mass state frozen without NaN
+- Bug fixes: kinetic energy formula, acceleration shape, JAX tracing with zero mass, initial state recording
+- G_DEFAULT = 1e-6 for log-price position scale (later rejected — see Conflicts.md)
 
-## خروجی مورد انتظار
-هر تغییر باید شامل:
-1. کد
-2. تست
-3. گزارش
-4. به‌روزرسانی docs
+**Falsifications:**
+- H2 virial test initially failed; later found to be a test design issue (see Conflicts.md CON-002)
 
-## ممنوعیت مطلق
-- ❌ استفاده از pandas در hot path
-- ❌ `time.sleep` در حلقه اصلی
-- ❌ `threading.Lock`
-- ❌ حافظه unbounded
-- ❌ پارامتر magic
-- ❌ ادعای سود
-- ❌ ادعای اجرا
+**Next:**
+- T-004: More invariant tests with varied scenarios
+- T-001/T-002: WebSocket client and Parquet storage
 
-## سبک کد
-- Python 3.10+
-- Type hints
-- Docstring برای هر تابع
-- تست unit اجباری
-- نام‌گذاری واضح
+---
 
-## سبک مستندسازی
-- Markdown
-- فرمول با LaTeX (`$...$` یا `$$...$$`)
-- جدول برای مقایسه
-- مثال عددی
+## [2026-10-07] [Phase 0] [Documentation Migration]
 
-## اگر گیر کردی
-1. `OpenProblems.md` را چک کن
-2. `Conflicts.md` را چک کن
-3. اگر حل نشد → به انسان ارجاع
+**Goal:** Translate all Persian/Korean documentation to English, reject ADR-007, fix virial test.
 
-## چک‌لیست قبل از commit
-- [ ] همه تست‌ها pass
-- [ ] ناورداها حفظ
-- [ ] پارامتر بیرونی اضافه نشده
-- [ ] فیلتر اضافه نشده
-- [ ] مستندات به‌روز
-- [ ] ResearchLog به‌روز
+**Method:**
+- Full rewrite of ResearchLog.md, Decisions.md, Changelog.md to English
+- Reject ADR-007 in Decisions.md (violates Axiom 4)
+- Log G_DEFAULT violation in Conflicts.md as CON-001
+- Update Physics.md with self-induced gravity formula
+- Create missing coordination files (AgentSync.md, AgentHandoff.md, QA_Protocol.md, Paperclip_Coordination.md, Five_Whys_Template.md, FMEA_Template.md)
 
-## نمونه پرامپت اجرا
+**Result:**
+- All documentation now in English
+- ADR-007 rejected, CON-001 logged
+- Self-induced gravity formula documented in Physics.md
+- Missing files created
 
-```
-# فعال‌سازی AI
-
-۱. docs/Philosophy.md را بخوان.
-۲. docs/Axioms.md را بخوان.
-۳. docs/TaskQueue.md را بخوان.
-۴. اولین وظیفه باز با اولویت بالا را بردار.
-۵. پیاده‌سازی کن.
-۶. تست کن.
-۷. ResearchLog.md را به‌روز کن.
-۸. برگرد به گام ۴.
-```
-
-## نمونه پرامپت بسط نظری
-
-```
-# بسط نظری
-
-۱. docs/OpenProblems.md را بخوان.
-۲. یک مسئله انتخاب کن.
-۳. برای آن راه‌حل ریاضی بنویس.
-۴. اگر ثابت شد → Concept.md را به‌روز کن.
-۵. اگر رد شد → FailureModes.md را به‌روز کن.
-۶. اگر ناتمام → OpenProblems.md را به‌روز کن.
-۷. ResearchLog.md را بنویس.
-```
-
-## نمونه پرامپت اعتبارسنجی
-
-```
-# اعتبارسنجی
-
-۱. docs/Hypotheses.md را بخوان.
-۲. docs/Experiments.md را بخوان.
-۳. یک آزمایش انتخاب کن.
-۴. کد تست بنویس.
-۵. اجرا کن.
-۶. نتیجه را در ResearchLog.md ثبت کن.
-۷. اگر فرضیه رد شد → FailureModes.md.
-۸. اگر تأیید شد → Changelog.md.
-```
-
-## نکته نهایی
-> **هدف این پروژه حقیقت است، نه سود.**
-> **رد شدن یک فرضیه = موفقیت پروژه.**
-> **هر تغییر باید ردپذیر باشد.**
+**Next:** Continue with Phase 0.3 (virial test fix)

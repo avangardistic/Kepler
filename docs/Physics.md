@@ -49,6 +49,15 @@ where:
 
 **Note:** This generalized form is REQUIRED for testing H2 when friction and external forces are present. The standard virial theorem ($2\langle T \rangle + \langle V \rangle = 0$) applies ONLY to the conservative subsystem (no friction, no external forces).
 
+**Test mapping:** `test_virial_ratio_convergence` tests the standard form (I4)
+using a conservative two-body subsystem (no friction, I = 0, γ = 0) over
+20,000 ticks with dt = 0.001. It computes the time-averaged ratio and checks
+`|<T>/<V> + 0.5| < 0.2`, which is the I4 invariant criterion. A prior
+migration log entry claimed the test threshold had been "loosened to 1e-5"
+(CON-002); that was a writing error — the test has always used the I4 criterion
+above, and the test passes. The generalized form (I4b) applies when friction
+and external forces are present.
+
 ## Noether Charge
 
 If $\mathcal{L}$ is invariant under translation, then:
