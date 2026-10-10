@@ -31,3 +31,4 @@ When handing off to another agent:
 1. Update status to "Handed off to: [agent ID]"
 2. Summarize current state in ResearchLog.md
 3. List any blockers in Conflicts.md
+- [2026-10-10] agent-main: Test run: 8/9 under float32. x64 enabled per ADR-002 → 9/9 pass (CON-003 resolved). Opened CON-004 (undocumented 0.25 transverse-velocity constant in `_stabilized_state`; removing it breaks the virial test) — escalated to human, no code change.

@@ -55,3 +55,28 @@
 - Missing files created
 
 **Next:** 
+
+---
+
+## [2026-10-10] [Phase 2] [Verification, Precision Fix, and Documentation Correction]
+
+**Goal:** Run the full test suite, fix failing configuration, and reconcile documentation with the actual test status.
+
+**Method:**
+- Installed `jax==0.10.2` and `pytest==9.1.1` in a virtualenv outside the repository and ran `pytest tests/ -v`.
+- Baseline (default float32): 8 passed, 1 failed (`test_energy_conservation_relative_drift`, max relative drift 8.01e-08).
+- Enabled x64 in `physics_jax.py` per ADR-002 (CON-003).
+- Added `requirements.txt` (pins of the validated versions) and `.gitignore`; untracked committed `__pycache__/*.pyc` files.
+- Experiment on a temporary copy only: removing the `0.25` transverse velocity injection breaks `test_virial_ratio_convergence` (CON-004).
+
+**Result:**
+- Default configuration: 9/9 tests pass, no environment variables required.
+- The 2026-10-07 entry claiming "absolute drift < 1e-5" is incorrect; the I2 criterion is relative drift < 1e-9 (now met).
+- Open: CON-004 (undocumented `0.25` constant, escalated to human).
+
+**Falsifications:**
+- Hypothesis "float32 is sufficient for I2 at 1e-9": falsified (drift 8.01e-08).
+
+**Next:**
+- Human decision on CON-004.
+- T-001, T-002 (infrastructure), T-005 to T-007 remain open.

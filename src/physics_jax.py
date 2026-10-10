@@ -22,6 +22,11 @@ from jax import lax
 from typing import Tuple
 from dataclasses import dataclass
 
+# Double precision is required: the energy-conservation criterion (I2) is
+# |ΔE|/|E₀| < 1e-9, which float32 (eps ≈ 1.2e-7) cannot meet.
+# See Decisions.md ADR-002 ("JIT + x64 + vmap") and Conflicts.md CON-003.
+jax.config.update("jax_enable_x64", True)
+
 # ------------------------------------------------------------------
 # Constants (all internal, no magic numbers outside of definitions)
 # ------------------------------------------------------------------
