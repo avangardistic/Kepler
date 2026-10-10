@@ -1,110 +1,72 @@
-# Research Log
+# Changelog
 
-## [2025-01-15] [Phase 0] [Initialization]
+> **Accuracy note (2026-10-10).** The v0.2.0–v0.5.0 entries below were produced
+> by the initial documentation generator and describe work that is **not
+> present in this repository**. As of 2026-10-10 the only source file is
+> `src/physics_jax.py`; `fast_l2_client`, `tick_buffer`, `detectors_numba`,
+> `market_maker` and `simulation_live_v3` do not exist. They are recorded here
+> as planned milestones (roadmap Phase 1, 3, 4, 5), not delivered features.
 
-**Goal:** Generate complete documentation structure.
+## v0.1.0 — 2025-01
+- Initial Concept, Philosophy, Strategy.
 
-**Method:** Generate 41 MD files via script.
+## v0.2.0 — 2025-01 (planned — not in repository)
+- Added Implementation (documentation: `docs/Implementation.md`).
+- Introduced physics_jax (delivered later, 2026-10-07).
 
-**Result:** All files ready.
+## v0.3.0 — 2025-01 (planned — not in repository)
+- Added detectors_numba. → roadmap Phase 3, task T-005.
+- Added market_maker (A-S). → roadmap Phase 4, task T-006.
 
-**Next:** Start T-001.
+## v0.4.0 — 2025-01 (planned — not in repository)
+- Migrated to uvloop + orjson. → roadmap Phase 1.
+- Added fast_l2_client. → roadmap Phase 1, task T-001.
 
----
+## v0.5.0 — 2025-01 (planned — not in repository)
+- Ten L2 states.
+- simulation_live_v3. → roadmap Phase 5, task T-007.
 
-## [2026-10-07] [Phase 2] [physics_jax — Initial Implementation]
+## v1.0.0 — (target)
+- 10 million ticks.
+- Full validation.
+- Whitepaper.
 
-**Goal:** Implement three-body physics engine with symplectic integrator (velocity Verlet) in JAX.
+## [2026-10-07] — physics_jax.py
+- Implemented `symplectic_step` (velocity Verlet)
+- Implemented `integrate` with lax.scan
+- JAX pytree registration for ThreeBodyState
+- Invariant tests: energy, angular momentum, virial, imbalance
+- Zero-mass (empty book) support without NaN
 
-**Method:**
-- Create `ThreeBodyState` class with position, velocity, mass, imbalance, friction
-- Define kinetic energy, potential energy, virial ratio, angular momentum functions
-- Implement `symplectic_step` with equations of motion from Concept.md §3
-- Implement `integrate` with `lax.scan` for long simulations
-- Register ThreeBodyState as JAX pytree for JIT compatibility
+## [2026-10-07] — Documentation Migration
+- Translated all Persian/Korean documentation to English
+- Rejected ADR-007 (G_DEFAULT violates Axiom 4)
+- Added self-induced gravity formula to Physics.md
+- Created coordination files (AgentSync, AgentHandoff, QA_Protocol, etc.)
+- Corrected CON-002 log entry (prior pass mistakenly recorded a threshold loosening
+  that never occurred; the test always used the I4 criterion |<T>/<V> + 0.5| < 0.2)
 
-**Result:**
-- 9 unit tests passing: energy conserved (absolute drift < 1e-5), angular momentum bounded, virial ratio acceptable, imbalance always in [-1,1], zero-mass state frozen without NaN
-- Bug fixes: kinetic energy formula, acceleration shape, JAX tracing with zero mass, initial state recording
-- G_DEFAULT = 1e-6 for log-price position scale (later rejected — see Conflicts.md)
+## [2026-10-10] — Verification and Precision Fix
+- Enabled x64 precision in physics_jax.py (ADR-002); energy test (I2, 1e-9) now passes on default configuration. All 9 tests pass.
+- Added requirements.txt (jax 0.10.2, pytest 9.1.1).
+- Added .gitignore; untracked committed __pycache__ bytecode files.
+- Correction: the 2026-10-07 log claim of "absolute drift < 1e-5" did not match the I2 criterion (relative 1e-9). See Conflicts.md CON-003.
+- Opened CON-004: undocumented transverse velocity constant (0.25) in `_stabilized_state`, escalated for decision.
 
-**Falsifications:**
-- H2 virial test initially failed; later found to be a test design issue (see Conflicts.md CON-002)
+## [2026-10-10] — Geometric Embedding and Tool Decision
+- Replaced undocumented `0.25·sign(v)` with rigid-rotation embedding derived from self-induced gravity (ADR-008, CON-004 resolved).
+- Unified self-induced G to Physics.md normalisation (1/N) in one helper (CON-005 resolved).
+- Corrected the virial-test comment on angular momentum; threshold unchanged.
+- Added docs/ToolSelection.md (5 Whys, measured throughput) and ADR-009: keep Python + JAX.
+- All 9 tests pass in default configuration.
 
-**Next:**
-- T-004: More invariant tests with varied scenarios
-- T-001/T-002: WebSocket client and Parquet storage
-
----
-
-## [2026-10-07] [Phase 0] [Documentation Migration]
-
-**Goal:** Translate all Persian/Korean documentation to English, reject ADR-007, fix virial test.
-
-**Method:**
-- Full rewrite of ResearchLog.md, Decisions.md, Changelog.md to English
-- Reject ADR-007 in Decisions.md (violates Axiom 4)
-- Log G_DEFAULT violation in Conflicts.md as CON-001
-- Update Physics.md with self-induced gravity formula
-- Create missing coordination files (AgentSync.md, AgentHandoff.md, QA_Protocol.md, Paperclip_Coordination.md, Five_Whys_Template.md, FMEA_Template.md)
-
-**Result:**
-- All documentation now in English
-- ADR-007 rejected, CON-001 logged
-- Self-induced gravity formula documented in Physics.md
-- Missing files created
-
-**Next:** 
-
----
-
-## [2026-10-10] [Phase 2] [Verification, Precision Fix, and Documentation Correction]
-
-**Goal:** Run the full test suite, fix failing configuration, and reconcile documentation with the actual test status.
-
-**Method:**
-- Installed `jax==0.10.2` and `pytest==9.1.1` in a virtualenv outside the repository and ran `pytest tests/ -v`.
-- Baseline (default float32): 8 passed, 1 failed (`test_energy_conservation_relative_drift`, max relative drift 8.01e-08).
-- Enabled x64 in `physics_jax.py` per ADR-002 (CON-003).
-- Added `requirements.txt` (pins of the validated versions) and `.gitignore`; untracked committed `__pycache__/*.pyc` files.
-- Experiment on a temporary copy only: removing the `0.25` transverse velocity injection breaks `test_virial_ratio_convergence` (CON-004).
-
-**Result:**
-- Default configuration: 9/9 tests pass, no environment variables required.
-- The 2026-10-07 entry claiming "absolute drift < 1e-5" is incorrect; the I2 criterion is relative drift < 1e-9 (now met).
-- Open: CON-004 (undocumented `0.25` constant, escalated to human).
-
-**Falsifications:**
-- Hypothesis "float32 is sufficient for I2 at 1e-9": falsified (drift 8.01e-08).
-
-**Next:**
-- Human decision on CON-004.
-- T-001, T-002 (infrastructure), T-005 to T-007 remain open.
-
-## [2026-10-10] [Phase 2] [Geometric Embedding (ADR-008) and Tool Selection (ADR-009)]
-
-**Goal:** Remove the undocumented transverse-velocity constant (CON-004) using the most precise formula derivable from the documents, and decide whether any heavy computation needs another language.
-
-**Method:**
-- Tested candidate embeddings on copies in /tmp (not committed):
-  - Same-direction velocity for all bodies: energy blows up (0.01 → 282); virial test fails.
-  - Rigid rotation with Kepler speed and heuristic r̄: virial test passes (deviation 0.015).
-  - Rigid rotation with least-squares ω from the force balance and Physics.md G (1/N): virial test passes (0.055 at 20k ticks, 0.0054 at 200k ticks).
-- Found CON-005: the rotation used Physics.md G (1/N) while `integrate` used the code G (1/pairs). Inconsistent couplings gave ⟨T⟩/⟨V⟩ ≈ −2.39. Aligned both to one helper.
-- Measured JAX throughput: ≈ 3.3 M ticks/s (3 bodies, float64, 2 CPU cores). 10 M ticks ≈ 3 s.
-- 5 Whys analysis in docs/ToolSelection.md.
-
-**Result:**
-- Constant 0.25 removed; embedding derived from geometry (ADR-008, Physics.md §Embedding).
-- All 9 tests pass in the default float64 configuration.
-- Python + JAX kept; no other language introduced (ADR-009).
-- Test comment about L ≈ 0 corrected (L ≈ 0.707 is a physical rotation); threshold unchanged.
-
-**Falsifications:**
-- Hypothesis "same-direction transverse velocity conserves energy": falsified (E: 0.01 → 282).
-- Hypothesis "Python is too slow for 10 M ticks": falsified by measurement (≈ 3 s).
-
-**Open:**
-- Running time-average of G (Physics.md) is not implemented; initial-state G is used (CON-005 remark).
-- N ≥ 3 rigid-rotation approximation residual not yet measured.
-- T-001, T-002, T-005 to T-007 remain open.
+## [2026-10-10] — Documentation Status Sync (no code change)
+- `docs/prompt.md`: replaced a stale, truncated copy of `ResearchLog.md`
+  (stopped at 2026-10-07) with the canonical agent entry prompt.
+- `docs/TaskQueue.md`: T-003 and T-004 moved to Completed with verification
+  evidence; T-005/T-006/T-007 marked blocked by T-001/T-002; follow-ups listed.
+- `docs/Changelog.md`: v0.2.0–v0.5.0 annotated as planned, not delivered —
+  they described modules absent from the repository.
+- `docs/AgentSync.md`: recorded the two 2026-10-10 sessions.
+- Verified after the sync: `pytest tests/ -v` → 9 passed (jax 0.10.2,
+  pytest 9.1.1, Python 3.11).

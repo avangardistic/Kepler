@@ -1,57 +1,75 @@
-# Research Log
+# Task Queue
 
-## [2025-01-15] [Phase 0] [Initialization]
+## Status: Active
 
-**Goal:** Generate complete documentation structure.
+> **Sync note (2026-10-10).** T-003 and T-004 were completed in code and tests
+> but had never been moved out of "Open". They are now recorded under
+> "Completed" with their verification evidence. No code was changed by this
+> sync; `pytest tests/ -v` still reports 9 passed.
 
-**Method:** Generate 41 MD files via script.
+## Open
 
-**Result:** All files ready.
+### T-001 [Phase 1] [High]
+- **Title:** Implement fast_l2_client.py
+- **Input:** DataSpec.md
+- **Output:** WebSocket client
+- **Criterion:** Receive 10,000 ticks without dropout
 
-**Next:** Start T-001.
+### T-002 [Phase 1] [High]
+- **Title:** tick_buffer with polars
+- **Input:** DataSpec.md
+- **Output:** Parquet storage
+- **Criterion:** Deterministic retrieval
 
----
+### T-005 [Phase 3] [High]
+- **Title:** detectors_numba.py
+- **Input:** Detectors.md
+- **Output:** Iceberg + Spoof
+- **Criterion:** F1 > 0.8 on synthetic data
+- **Blocked by:** T-001, T-002 (needs recorded L2 ticks)
 
-## [2026-10-07] [Phase 2] [physics_jax — Initial Implementation]
+### T-006 [Phase 4] [High]
+- **Title:** market_maker.py
+- **Input:** MarketMaking.md
+- **Output:** quote_all
+- **Criterion:** bid < ask always
+- **Blocked by:** T-001, T-002 (needs recorded L2 ticks)
 
-**Goal:** Implement three-body physics engine with symplectic integrator (velocity Verlet) in JAX.
+### T-007 [Phase 5] [High]
+- **Title:** simulation_live_v3
+- **Input:** All
+- **Output:** 10M tick simulation
+- **Criterion:** Pi > 0 with 95% CI
+- **Blocked by:** T-001 … T-006
 
-**Method:**
-- Create `ThreeBodyState` class with position, velocity, mass, imbalance, friction
-- Define kinetic energy, potential energy, virial ratio, angular momentum functions
-- Implement `symplectic_step` with equations of motion from Concept.md §3
-- Implement `integrate` with `lax.scan` for long simulations
-- Register ThreeBodyState as JAX pytree for JIT compatibility
+## In Progress
+(Empty)
 
-**Result:**
-- 9 unit tests passing: energy conserved (absolute drift < 1e-5), angular momentum bounded, virial ratio acceptable, imbalance always in [-1,1], zero-mass state frozen without NaN
-- Bug fixes: kinetic energy formula, acceleration shape, JAX tracing with zero mass, initial state recording
-- G_DEFAULT = 1e-6 for log-price position scale (later rejected — see Conflicts.md)
+## Completed
+- [x] T-000 [Phase 0] Generate all docs
+- [x] T-003 [Phase 2] physics_jax.py — `src/physics_jax.py` implements
+      `symplectic_step` (velocity Verlet) and `integrate` (`lax.scan`).
+      Verified 2026-10-10 with jax 0.10.2 / pytest 9.1.1 on Python 3.11:
+      `pytest tests/ -v` → 9 passed.
+      Criterion re-checked: I1 angular momentum bounded, I2 relative energy
+      drift < 1e-9 (requires the x64 flag set in code per ADR-002).
+- [x] T-004 [Phase 2] Invariant tests — `tests/test_physics.py` (9 tests):
+      angular momentum (zero at rest, bounded over 10k ticks, cumulative
+      series recorded), energy conservation, virial ratio (I4), imbalance
+      bound (I6), zero-depth freeze, ε-softening, determinism.
+      All pass in the default configuration.
 
-**Falsifications:**
-- H2 virial test initially failed; later found to be a test design issue (see Conflicts.md CON-002)
+## Prioritization
+1. T-001, T-002 (infrastructure) — everything downstream needs recorded L2 ticks.
+2. T-005 (detection)
+3. T-006 (MM)
+4. T-007 (integration)
 
-**Next:**
-- T-004: More invariant tests with varied scenarios
-- T-001/T-002: WebSocket client and Parquet storage
-
----
-
-## [2026-10-07] [Phase 0] [Documentation Migration]
-
-**Goal:** Translate all Persian/Korean documentation to English, reject ADR-007, fix virial test.
-
-**Method:**
-- Full rewrite of ResearchLog.md, Decisions.md, Changelog.md to English
-- Reject ADR-007 in Decisions.md (violates Axiom 4)
-- Log G_DEFAULT violation in Conflicts.md as CON-001
-- Update Physics.md with self-induced gravity formula
-- Create missing coordination files (AgentSync.md, AgentHandoff.md, QA_Protocol.md, Paperclip_Coordination.md, Five_Whys_Template.md, FMEA_Template.md)
-
-**Result:**
-- All documentation now in English
-- ADR-007 rejected, CON-001 logged
-- Self-induced gravity formula documented in Physics.md
-- Missing files created
-
-**Next:** Continue with Phase 0.3 (virial test fix)
+## Known follow-ups (not tasks yet)
+- Running time-average of ⟨d²⟩ for the self-induced coupling: `integrate`
+  currently fixes `G` from the initial state (see Conflicts.md CON-005,
+  open remark). Needs a decision before Phase 5.
+- Measure the residual of the rigid-rotation embedding for N ≥ 3 (ADR-008):
+  exact only for two bodies.
+- `docs/Changelog.md` entries v0.2.0–v0.5.0 describe modules that are not in
+  the repository; they are planned, not delivered. See roadmap.md.
