@@ -2,7 +2,7 @@
 
 > **Canonical navigation hub.** The 48 topic documents are organized into five numbered categories. Edit the canonical file in its category; flat files such as `docs/Axioms.md` are compatibility stubs only.
 
-**Reviewed:** 2026-10-11 · **Current gate:** CON-008 remains open · **Last recorded suite:** 41 passed in the pinned environment (not re-run by this documentation migration).
+**Reviewed:** 2026-10-11 · **Current gate:** CON-008 and CON-011 remain open · **Last recorded suite:** 41 passed in the pinned environment (not re-run by this documentation migration).
 
 ## Start here
 
@@ -11,7 +11,7 @@
 | What the project is and is not | [`04_planning/goal.md`](04_planning/goal.md) |
 | What is implemented and what is blocked | [`04_planning/roadmap.md`](04_planning/roadmap.md) and [`04_planning/TaskQueue.md`](04_planning/TaskQueue.md) |
 | Agent/contributor workflow | [`AGENTS.md`](../AGENTS.md), then [`04_planning/MISSION_PROMPT.md`](04_planning/MISSION_PROMPT.md) |
-| Current scientific blockers | [`03_research/Conflicts.md`](03_research/Conflicts.md), especially CON-008/CON-009 |
+| Current scientific blockers | [`03_research/Conflicts.md`](03_research/Conflicts.md), especially CON-008/CON-009/CON-011 |
 | Install, test, capture, and replay | [`../README.md`](../README.md) |
 
 ## 01 · Theory
@@ -28,7 +28,7 @@ Foundations, model definitions, and mathematical claims. Claims remain hypothese
 | [`01_theory/Geometry.md`](01_theory/Geometry.md) | Orbital geometry notes |
 | [`01_theory/HedgeMath.md`](01_theory/HedgeMath.md) | Proposed hedge arithmetic; not an execution layer |
 | [`01_theory/Invariants.md`](01_theory/Invariants.md) | I1–I7 and Phase 1 retention criteria |
-| [`01_theory/Microprice.md`](01_theory/Microprice.md) | Microprice definition |
+| [`01_theory/Microprice.md`](01_theory/Microprice.md) | Microprice definition; implementation deviates — CON-011 |
 | [`01_theory/OrderBookMath.md`](01_theory/OrderBookMath.md) | L2 order-book arithmetic |
 | [`01_theory/Philosophy.md`](01_theory/Philosophy.md) | Research scope and epistemic boundaries |
 | [`01_theory/Physics.md`](01_theory/Physics.md) | Lagrangian, forces, energy, virial relation, coupling |
@@ -58,7 +58,7 @@ Evidence, uncertainty, failure analysis, and research history.
 | Document | Role |
 |---|---|
 | [`03_research/Changelog.md`](03_research/Changelog.md) | User-visible and project changes; planned releases are marked as such |
-| [`03_research/Conflicts.md`](03_research/Conflicts.md) | Resolved and open contradictions; CON-008/CON-009 remain open |
+| [`03_research/Conflicts.md`](03_research/Conflicts.md) | Resolved and open contradictions; CON-008/CON-009/CON-011 remain open |
 | [`03_research/Experiments.md`](03_research/Experiments.md) | Proposed experiment catalogue; not a record of completed tests |
 | [`03_research/FailureModes.md`](03_research/FailureModes.md) | Known failure modes, including F10 real-data failure |
 | [`03_research/Falsifiability.md`](03_research/Falsifiability.md) | Rejection criteria and current evidence status |

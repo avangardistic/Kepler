@@ -1,5 +1,9 @@
 # Hedge Mathematics
 
+> Proposal only. No hedge is executed or implemented, the constraint is not
+> validated, and the constraint-projection step below does not exist in `src/`
+> (Axiom 5; CON-009).
+
 ## 1. Hedge Ratio
 $$
 h_{ij} = \frac{m_j |I_i|}{m_i |I_j| + m_j |I_i|}

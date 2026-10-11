@@ -14,6 +14,7 @@ This file describes boundaries of the current data and implementation. It is not
 
 - The three-body mapping is a model hypothesis, not a physical law. Terms such as mass, force, and gravity are analogies with explicit mathematical definitions.
 - The code's self-induced `G` is held from the initial state, while the theory describes a running average (CON-005 remark).
+- The position/friction construction in `state_from_l2` does not match the documented level-1 microprice and price-scaled friction (CON-011, open).
 - ADR-008's rigid-rotation embedding is exact for two bodies, not general three-body input.
 - The captured real-data replay fails I1/I2 on tested paths at `dt = 1` (CON-008/F10). A passing synthetic test does not remove this limitation.
 - The replay-to-state path was measured as a performance bottleneck; see the research log/task queue for the recorded environment and measurement.

@@ -39,7 +39,7 @@ Apply 5 Whys iteratively:
    **Branch B:** [path 2]
    ```
 
-3. **Document each step.** Write the analysis in `ResearchLog.md` under a dedicated section.
+3. **Document each step.** Write the analysis in [`ResearchLog.md`](ResearchLog.md) under a dedicated section.
 
 4. **Stop at actionable root cause.** Don't continue past the point where you can take action.
 

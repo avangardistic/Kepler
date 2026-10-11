@@ -1,5 +1,12 @@
 # Microprice
 
+> **Remark (open conflict CON-011).** The formulas below are the documented
+> definition. The current `state_from_l2` implementation does **not** evaluate
+> the standard level-1 microprice: it uses a sum over the received price levels
+> (and applies `_gamma` to the log price instead of the price). See
+> [`../03_research/Conflicts.md`](../03_research/Conflicts.md) CON-011 before
+> relying on a measured `x_i`.
+
 ## Standard Definition
 $$
 P^\mu = \frac{q_1^a \cdot p_1^b + q_1^b \cdot p_1^a}{q_1^a + q_1^b}
@@ -28,3 +35,8 @@ Standard $P^\mu$ is used because:
 - Comes only from level 1
 - Sensitive to immediate change
 - No free parameter
+
+## Position mapping
+
+The model position is `x_i = ln P^μ_i` (Concept.md §2.2); the implementation
+status of that mapping is tracked in CON-011.

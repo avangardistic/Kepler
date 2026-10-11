@@ -270,7 +270,7 @@ def compute_total_energy(state: ThreeBodyState,
 
 def compute_virial_ratio(state: ThreeBodyState,
                          G: float | None = None) -> float:
-    """Virial ratio T / V; theoretical limit is −½ (Physics.md §Virial).
+    """Virial ratio T / V; theoretical limit is −½ (Physics.md §Virial Theorem (Standard)).
 
     H2 claims T/V → −1/2 (within 20%).
     

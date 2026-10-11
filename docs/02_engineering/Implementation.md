@@ -1,6 +1,6 @@
 # Implementation Status and Architecture
 
-## Implemented data/physics path
+## 1. Implemented data/physics path
 
 ```text
 raw L2 WebSocket snapshots
@@ -12,17 +12,9 @@ raw L2 WebSocket snapshots
   → physics_jax
 ```
 
-The ingestion, buffer/store/replay, and physics modules exist. This describes code paths, not proof that the three-body model is valid on real data; see CON-008/F10.
+The ingestion, buffer/store/replay, and physics modules exist. This describes code paths, not proof that the three-body model is valid on real data; see CON-008/F10. Planned modules are listed in §6.
 
-## Planned, not implemented
-
-```text
-replayed ticks → research detectors → [scope decision required] → simulation/validation
-```
-
-`detectors_numba`, market-making/quote generation, long-run simulation, and validation modules are not present. In particular, do not infer an exchange-execution layer from the old pipeline diagrams or strategy sketches.
-
-## Technology status
+## 2. Technology status
 
 | Layer | Library | Status |
 |---|---|---|
@@ -33,7 +25,7 @@ replayed ticks → research detectors → [scope decision required] → simulati
 | Detectors | Numba (planned) | Reserved by ADR-003; no detector module is implemented |
 | Storage | Polars / Parquet + zstd | Used by `src/tick_buffer.py` (T-002); some CPUs require the compatible runtime extra (ADR-011) |
 
-## Repository layout
+## 3. Repository layout
 
 ```text
 Kepler/
@@ -58,7 +50,7 @@ Kepler/
 
 The docs index lists all canonical documents. Flat `docs/<name>.md` files are compatibility stubs. The implemented Python modules remain flat until a measured need justifies a package split.
 
-## Data flow and invariants
+## 4. Data flow and invariants
 
 - The client decodes and retains the snapshot fields; book validation is counted, not used to silently filter a tick.
 - The buffer is bounded and flushes to the partitioned Parquet store.
@@ -66,10 +58,18 @@ The docs index lists all canonical documents. Flat `docs/<name>.md` files are co
 - Raw ticks are stored; model-derived values are recomputed at replay time.
 - A synthetic physics test is not a real-data validation. Report the CON-008 failure with any real-data result.
 
-## Engineering constraints
+## 5. Engineering constraints
 
 Avoid unbounded memory and silent tick filtering. Avoid adding dependencies without a measured need and an ADR where appropriate. Do not add quote output or exchange connectivity for order placement.
 
-## Verification
+## 6. Planned, not implemented
+
+```text
+replayed ticks → research detectors → [scope decision required] → simulation/validation
+```
+
+`detectors_numba`, market-making/quote generation, long-run simulation, and validation modules are not present. In particular, do not infer an exchange-execution layer from the old pipeline diagrams or strategy sketches.
+
+## 7. Verification
 
 Use the tests under `tests/`. The last recorded pinned-environment run reported 41 passing tests; run the suite in the current environment before claiming current verification. Live-feed captures are optional research measurements, not a substitute for deterministic tests, and must be reported separately.

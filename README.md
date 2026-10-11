@@ -38,7 +38,7 @@ The physics code uses a velocity-Verlet/symplectic integration path. Passing syn
 
 ## Requirements and verification
 
-The pinned environment recorded in the repository is Python 3.11, JAX 0.10.2, pytest 9.1.1, websockets 17.2, orjson 3.13.0, and polars 2.0.0. `uvloop` is optional. On CPUs unsupported by the standard Polars runtime, use the compatible runtime extra described in [`docs/02_engineering/Decisions.md`](docs/02_engineering/Decisions.md) ADR-011.
+The pinned environment recorded in the repository is Python 3.11, JAX 0.10.2, pytest 9.1.1, websockets 17.2, orjson 3.13.0, and polars 2.0.0. `uvloop` is optional. On CPUs unsupported by the standard Polars runtime, install the compatible runtime extra described in [`docs/02_engineering/Decisions.md`](docs/02_engineering/Decisions.md) ADR-011 (`pip install "polars[rtcompat]==2.0.0"`).
 
 ```bash
 python3 -m venv .venv
@@ -100,6 +100,7 @@ Flat `docs/<name>.md` files are compatibility stubs pointing to the canonical ca
 
 - **CON-008 / F10:** I1/I2 fail on tested real-data replay paths at `dt = 1`. The measured paths include energy drift 281 for the 2-D conservative path, 1.54 for the manually embedded conservative path, and larger drift with imbalance. The required I2 threshold is `< 1e-9`; no threshold has been loosened.
 - **CON-005 remark:** `integrate` holds `G` from the initial state, while the theory document describes a running time average. This has not been resolved.
+- **CON-011:** `state_from_l2` does not compute the documented level-1 microprice (it sums prices across levels) and applies friction to a log price rather than a price. Open; it affects every real-data state and therefore the recorded CON-008 measurements.
 - **Embedding:** the rigid-rotation embedding is exact for two bodies; the general three-body residual is not a validated real-data solution.
 - **Capture scale:** the committed real fixture has 2,785 ticks. The 100,000-tick no-drop acceptance result is offline/in-process, not a full-scale live run.
 - **Unimplemented proposals:** detectors, quote/market-making output, long-run simulation, and validation experiments are not current code.

@@ -6,6 +6,8 @@ pytest==9.1.1
 websockets==17.2   # raw L2 WebSocket feed (Implementation.md §2)
 orjson==3.13.0     # ADR-004 JSON decoder; optional at runtime (ADR-010)
 polars==2.0.0      # Parquet + zstd storage (DataSpec.md §Storage, ADR-011)
+                   # On CPUs without AVX2/FMA/BMI the default runtime refuses
+                   # to start: pip install "polars[rtcompat]==2.0.0" (ADR-011).
 
 # uvloop is intentionally NOT pinned: it has no Windows implementation and is
 # imported opportunistically by src/fast_l2_client.py (ADR-004, ADR-010).

@@ -15,6 +15,7 @@ Historical work and evidence are in [`../03_research/ResearchLog.md`](../03_rese
 ## Current blockers and next work
 
 - **CON-008:** open model decision. I1/I2 fail on the committed real-data replay at `dt = 1`; a maintainer decision and re-measurement are required before claiming real-data validation or proceeding to Phase 5.
+- **CON-011:** open implementation/doc mismatch — `state_from_l2` does not compute the documented level-1 microprice and scales friction by a log price. A decision (fix or document as intended) is required before further real-data claims.
 - **T-005:** open and not blocked by Phase 1; detector work can use the recorded L2 data without relying on `integrate`.
 - **T-006:** blocked pending a scope decision because quote generation conflicts with the project's anti-goals.
 - **T-007 / Phase 5:** blocked by CON-008 and by the need to define `Π` and its experiment.

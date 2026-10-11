@@ -5,9 +5,10 @@
 ## Current priority
 
 1. **CON-008 decision:** a maintainer must choose the model direction and record an ADR before real-data I1/I2 claims or Phase 5. This is a decision gate, not a code task for an agent to settle unilaterally.
-2. **T-005:** detectors can proceed on recorded raw ticks and do not depend on `integrate`.
-3. **T-006:** blocked pending a scope decision about quote generation versus the anti-goals.
-4. **T-007:** blocked by CON-008 and the need to define the mathematical `Π` experiment.
+2. **CON-011 decision:** `state_from_l2` does not compute the documented level-1 microprice and applies friction to a log price. Either correct the implementation and re-run the CON-008 measurements, or record the aggregate construction as intended (ADR) and update Microprice.md/Concept.md/ADR-001. Do not change it silently.
+3. **T-005:** detectors can proceed on recorded raw ticks and do not depend on `integrate`.
+4. **T-006:** blocked pending a scope decision about quote generation versus the anti-goals.
+5. **T-007:** blocked by CON-008 and the need to define the mathematical `Π` experiment.
 
 ## Open
 
@@ -49,4 +50,5 @@ The last repository-recorded suite result was **41 passed** with the pinned depe
 - `TickReplay.states()` was measured at about 76 states/s in the recorded environment because state construction is outside JIT. Optimize only after re-benchmarking and preserving outputs.
 - `integrate` holds self-induced `G` from the initial state; the docs' running time-average description is not implemented (CON-005 remark).
 - T-001's full live 100,000-tick run is outstanding; the committed fixture is smaller.
-- Keep current changelog entries labelled correctly: the v0.2.0–v0.5.0 modules were planned, not delivered.
+- Keep changelog labels accurate: `fast_l2_client` (v0.4.0) was delivered 2026-10-11; `detectors_numba`, `market_maker` and `simulation_live_v3` remain unimplemented.
+- The documented L2→state formulas and the implementation disagree (microprice and friction scale): CON-011 is open and needs a maintainer decision; it affects any real-data state used for CON-008 measurements.

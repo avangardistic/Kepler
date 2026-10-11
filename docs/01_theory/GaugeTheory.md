@@ -1,5 +1,8 @@
 # Gauge Theory for Gaps
 
+> Analogy/proposal only: no gauge-theoretic result is derived, tested, or
+> implemented in `src/`.
+
 ## 1. Gauge Field
 $$
 A_\mu = (\Phi, \mathbf{A})

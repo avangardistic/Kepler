@@ -1,5 +1,9 @@
 # Open Problems
 
+> Speculative research questions, not claims, results, or a roadmap. Several
+> (entropy, `ℏ`, nine-body extensions) are outside the current scope and
+> implementation.
+
 ## 1. Attraction vs Repulsion
 In negative correlation, Newtonian gravity is incorrect. New model needed.
 
