@@ -1,17 +1,3 @@
-# AI Protocol
+# Moved: AI_Protocol
 
-## Structure
-- LLM generates HFT research
-- Mathematical formalism only, no code unless validated
-- Documentation-first, code-second
-
-## Rules
-- Do not execute trading strategies
-- Do not use external parameters without documenting the violation
-- Every claim must have a rejection criterion
-- Maintain synchronization with other agents via Paperclip
-
-## Coordination
-- Use Paperclip for inter-agent communication
-- Fallback: AgentSync.md for state handoff
-- All state changes logged in ResearchLog.md
+This compatibility stub preserves older links. The canonical document is [`04_planning/AI_Protocol.md`](04_planning/AI_Protocol.md). Edit the canonical file, not this stub.

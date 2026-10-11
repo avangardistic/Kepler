@@ -1,160 +1,109 @@
-# Kepler Documentation Index
+# Kepler Documentation Map
 
-> **Navigation hub for all 48 project documents.**  
-> Start here to find the right doc for your task. Every link is relative to `docs/`; the project root is `../`.
+> **Canonical navigation hub.** The 48 topic documents are organized into five numbered categories. Edit the canonical file in its category; flat files such as `docs/Axioms.md` are compatibility stubs only.
 
-**Last updated:** 2026-10-11 · **Status:** `stable` · **Validated:** `Python 3.11 / jax 0.10.2 / pytest 9.1.1 (41 tests)`
+**Reviewed:** 2026-10-11 · **Current gate:** CON-008 remains open · **Last recorded suite:** 41 passed in the pinned environment (not re-run by this documentation migration).
 
----
+## Start here
 
-## Quick Start
-
-| You want to… | Read… |
+| Need | Read |
 |---|---|
-| Understand what Kepler is / is not | [`goal.md`](goal.md) — goals, constraints, anti-goals |
-| Clone, install, run tests or capture ticks | [`../README.md`](../README.md#getting-started) |
-| See the big picture in one page | [`Concept.md`](Concept.md) |
+| What the project is and is not | [`04_planning/goal.md`](04_planning/goal.md) |
+| What is implemented and what is blocked | [`04_planning/roadmap.md`](04_planning/roadmap.md) and [`04_planning/TaskQueue.md`](04_planning/TaskQueue.md) |
+| Agent/contributor workflow | [`AGENTS.md`](../AGENTS.md), then [`04_planning/MISSION_PROMPT.md`](04_planning/MISSION_PROMPT.md) |
+| Current scientific blockers | [`03_research/Conflicts.md`](03_research/Conflicts.md), especially CON-008/CON-009 |
+| Install, test, capture, and replay | [`../README.md`](../README.md) |
 
----
+## 01 · Theory
 
-## 1 · Conceptual Foundation — *what the model claims*
+Foundations, model definitions, and mathematical claims. Claims remain hypotheses until their criteria are met.
 
-| Document | Description |
+| Document | Role |
 |---|---|
-| [`Concept.md`](Concept.md) | Core model definitions: microprice, mass, imbalance, friction |
-| [`Axioms.md`](Axioms.md) | 6 axioms the implementation must respect (no external params, tick time, …) |
-| [`Invariants.md`](Invariants.md) | Physical & retention invariants I1–I7 + test criteria |
-| [`Physics.md`](Physics.md) | Lagrangian, Euler-Lagrange, virial theorem, self-induced gravity |
-| [`Symplectic.md`](Symplectic.md) | Why the velocity-Verlet integrator conserves E and L |
-| [`Geometry.md`](Geometry.md) | Orbital-plane geometry notes |
-| [`Microprice.md`](Microprice.md) | Microprice derivation |
-| [`OrderBookMath.md`](OrderBookMath.md) | Order-book arithmetic |
-| [`TickModel.md`](TickModel.md) | Tick as time quantum |
-| [`Differential.md`](Differential.md) | Differential-form notes |
-| [`GaugeTheory.md`](GaugeTheory.md) | Gauge-theory sketch |
-| [`Quantum.md`](Quantum.md) | Quantum analogy sketch |
-| [`Notation.md`](Notation.md) | Symbol table |
+| [`01_theory/Assumptions.md`](01_theory/Assumptions.md) | Data/model assumptions and validity boundaries |
+| [`01_theory/Axioms.md`](01_theory/Axioms.md) | Project constraints, model definitions, and provisional claims |
+| [`01_theory/Concept.md`](01_theory/Concept.md) | Model vocabulary and state construction |
+| [`01_theory/Differential.md`](01_theory/Differential.md) | Differential-geometry extension notes |
+| [`01_theory/GaugeTheory.md`](01_theory/GaugeTheory.md) | Gauge-theory analogy/proposal |
+| [`01_theory/Geometry.md`](01_theory/Geometry.md) | Orbital geometry notes |
+| [`01_theory/HedgeMath.md`](01_theory/HedgeMath.md) | Proposed hedge arithmetic; not an execution layer |
+| [`01_theory/Invariants.md`](01_theory/Invariants.md) | I1–I7 and Phase 1 retention criteria |
+| [`01_theory/Microprice.md`](01_theory/Microprice.md) | Microprice definition |
+| [`01_theory/OrderBookMath.md`](01_theory/OrderBookMath.md) | L2 order-book arithmetic |
+| [`01_theory/Philosophy.md`](01_theory/Philosophy.md) | Research scope and epistemic boundaries |
+| [`01_theory/Physics.md`](01_theory/Physics.md) | Lagrangian, forces, energy, virial relation, coupling |
+| [`01_theory/Quantum.md`](01_theory/Quantum.md) | Quantum analogy notes; speculative |
+| [`01_theory/Strategy.md`](01_theory/Strategy.md) | Historical, unvalidated non-executable strategy sketch; T-006 blocked |
+| [`01_theory/Symplectic.md`](01_theory/Symplectic.md) | Symplectic integration notes |
+| [`01_theory/TickModel.md`](01_theory/TickModel.md) | Tick-time definition |
 
-**Cross-links:** `Concept → Axioms → Invariants → Physics → Symplectic`. For the self-induced coupling `G_eff = 1/⟨d²⟩` see Axiom 4 and `Physics §Self-Induced Gravity`.
+## 02 · Engineering
 
----
+Implementation contracts, decisions, and quality gates. A specification does not mean the module exists.
 
-## 2 · Engineering & Decisions — *how it is built*
-
-| Document | Description |
+| Document | Role |
 |---|---|
-| [`Decisions.md`](Decisions.md) | 11 ADRs (microprice, JAX, uvloop/orjson where-applicable, embedding, …) |
-| [`Implementation.md`](Implementation.md) | Architecture, stack, folder layout, tick flow (implemented vs planned) |
-| [`ToolSelection.md`](ToolSelection.md) | Why Python + JAX was kept (measured 3.3 M ticks/s) |
-| [`DataSpec.md`](DataSpec.md) | L2 schema, Parquet/zstd layout, validation semantics, codec check |
-| [`QA_Protocol.md`](QA_Protocol.md) | Invariant-first, falsification-first QA workflow |
-| [`AI_Protocol.md`](AI_Protocol.md) | Agent protocol |
-| [`AgentSync.md`](AgentSync.md) | Multi-agent sync log |
-| [`AgentHandoff.md`](AgentHandoff.md) | Handoff notes |
-| [`Assumptions.md`](Assumptions.md) | Explicit assumptions |
-| [`Strategy.md`](Strategy.md) | Strategy sketch |
-| [`HedgeMath.md`](HedgeMath.md) | Hedge arithmetic |
-| [`Limitations.md`](Limitations.md) | Known scoping limits |
+| [`02_engineering/DataSpec.md`](02_engineering/DataSpec.md) | Raw L2 schema, storage, and validation |
+| [`02_engineering/Decisions.md`](02_engineering/Decisions.md) | Architecture decision records (ADR-001–ADR-011) |
+| [`02_engineering/Detectors.md`](02_engineering/Detectors.md) | Detector specification; implementation is not present |
+| [`02_engineering/Implementation.md`](02_engineering/Implementation.md) | Implemented architecture versus planned pipeline |
+| [`02_engineering/MarketMaking.md`](02_engineering/MarketMaking.md) | Unimplemented proposal, blocked by scope conflict CON-009 |
+| [`02_engineering/QA_Protocol.md`](02_engineering/QA_Protocol.md) | Test and evidence workflow |
+| [`02_engineering/ToolSelection.md`](02_engineering/ToolSelection.md) | Recorded language/tool selection analysis |
 
-**Storage layout (DataSpec §Storage):** `<root>/symbol=<S>/day=<YYYY-MM-DD>/part-NNNN.parquet`, Parquet + zstd, one row per tick. Columns are frozen (`TICK_SCHEMA` in `src/tick_buffer.py`).
+## 03 · Research
 
----
+Evidence, uncertainty, failure analysis, and research history.
 
-## 3 · Quality & Validation — *how we know it is wrong or right*
-
-| Document | Description |
+| Document | Role |
 |---|---|
-| [`Conflicts.md`](Conflicts.md) | 8 conflicts (CON-001…CON-008); CON-008 is **open, escalated** |
-| [`FailureModes.md`](FailureModes.md) | 10 failure modes; F10 = real-data invariant failure (measured table) |
-| [`Falsifiability.md`](Falsifiability.md) | Falsification criteria |
-| [`FMEA_Template.md`](FMEA_Template.md) | FMEA template |
-| [`Five_Whys_Template.md`](Five_Whys_Template.md) | 5-Whys template |
-| [`Hypotheses.md`](Hypotheses.md) | Hypotheses log |
-| [`Experiments.md`](Experiments.md) | Experiments log |
-| [`PriorArt.md`](PriorArt.md) | Prior art survey |
-| [`RegimeCatalog.md`](RegimeCatalog.md) | Market-regime catalog |
-| [`Detectors.md`](Detectors.md) | Detector spec (Phase 3, not yet implemented) |
-| [`MarketMaking.md`](MarketMaking.md) | Market-making spec (Phase 4) |
-| [`OpenProblems.md`](OpenProblems.md) | Open research questions |
+| [`03_research/Changelog.md`](03_research/Changelog.md) | User-visible and project changes; planned releases are marked as such |
+| [`03_research/Conflicts.md`](03_research/Conflicts.md) | Resolved and open contradictions; CON-008/CON-009 remain open |
+| [`03_research/Experiments.md`](03_research/Experiments.md) | Proposed experiment catalogue; not a record of completed tests |
+| [`03_research/FailureModes.md`](03_research/FailureModes.md) | Known failure modes, including F10 real-data failure |
+| [`03_research/Falsifiability.md`](03_research/Falsifiability.md) | Rejection criteria and current evidence status |
+| [`03_research/FMEA_Template.md`](03_research/FMEA_Template.md) | Failure-mode analysis template |
+| [`03_research/Five_Whys_Template.md`](03_research/Five_Whys_Template.md) | Root-cause analysis template |
+| [`03_research/Hypotheses.md`](03_research/Hypotheses.md) | Provisional, testable claims and status |
+| [`03_research/Limitations.md`](03_research/Limitations.md) | Known limitations and scope boundaries |
+| [`03_research/OpenProblems.md`](03_research/OpenProblems.md) | Open mathematical questions |
+| [`03_research/PriorArt.md`](03_research/PriorArt.md) | Prior-art notes |
+| [`03_research/RegimeCatalog.md`](03_research/RegimeCatalog.md) | Proposed L2 regime catalog |
+| [`03_research/ResearchLog.md`](03_research/ResearchLog.md) | Dated evidence and session history |
 
-**Key falsification (2026-10-11):** replaying 2 785 live ticks at `dt = 1` fails I2 by 9–15 orders of magnitude in every path. See `FailureModes F10` and `Conflicts CON-008`. No threshold has been loosened.
+## 04 · Planning and workflow
 
----
+Mission, work queue, coordination, and contributor prompts.
 
-## 4 · Planning & Progress — *where we are going*
-
-| Document | Description |
+| Document | Role |
 |---|---|
-| [`roadmap.md`](roadmap.md) | Phases 0–5 |
-| [`TaskQueue.md`](TaskQueue.md) | T-000…T-007 (T-001/T-002 done, T-005 next, CON-008 blocks T-007) |
-| [`MISSION_PROMPT.md`](MISSION_PROMPT.md) | Canonical onboarding prompt for a fresh agent |
-| [`prompt.md`](prompt.md) | Alias of the mission prompt |
-| [`Philosophy.md`](Philosophy.md) | Project philosophy |
-| [`Changelog.md`](Changelog.md) | Version history + 2026-10-07/10/11 migration notes |
-| [`ResearchLog.md`](ResearchLog.md) | Dated session log (most detailed history) |
-| [`Paperclip_Coordination.md`](Paperclip_Coordination.md) | Coordination notes |
-| [`PromptLibrary.md`](PromptLibrary.md) | Prompt library |
+| [`04_planning/AI_Protocol.md`](04_planning/AI_Protocol.md) | Source-of-truth and task loop |
+| [`04_planning/AgentHandoff.md`](04_planning/AgentHandoff.md) | Clean handoff format |
+| [`04_planning/AgentSync.md`](04_planning/AgentSync.md) | Optional lightweight manual claims and blockers |
+| [`04_planning/MISSION_PROMPT.md`](04_planning/MISSION_PROMPT.md) | Current onboarding prompt |
+| [`04_planning/Paperclip_Coordination.md`](04_planning/Paperclip_Coordination.md) | Optional external coordination guidance |
+| [`04_planning/PromptLibrary.md`](04_planning/PromptLibrary.md) | Scoped prompts for implementation, research, review, and handoff |
+| [`04_planning/TaskQueue.md`](04_planning/TaskQueue.md) | Current task status, dependencies, and gates |
+| [`04_planning/goal.md`](04_planning/goal.md) | Project objective, boundaries, and claim status |
+| [`04_planning/roadmap.md`](04_planning/roadmap.md) | Phases and evidence gates |
 
-**Current status (README):** Phase 0 done · Phase 1 done (41 tests) · Phase 2 implemented (CON-008 open) · Phase 3+ not started.
+## 05 · Reference
 
----
-
-## 5 · Reference — *lookup*
-
-| Document | Description |
+| Document | Role |
 |---|---|
-| [`Glossary.md`](Glossary.md) | Domain glossary |
-| [`Notation.md`](Notation.md) | Symbols & units |
-| [`References.md`](References.md) | Bibliography |
+| [`05_reference/Glossary.md`](05_reference/Glossary.md) | Domain terms |
+| [`05_reference/Notation.md`](05_reference/Notation.md) | Symbols and notation |
+| [`05_reference/References.md`](05_reference/References.md) | Bibliography |
 
----
+## Suggested reading paths
 
-## Suggested Reading Order
+- **New contributor:** `AGENTS.md` → goal → Axioms + Invariants → open Conflicts → relevant source/tests → QA Protocol.
+- **Physics/research:** Axioms → Concept → Physics → Invariants → CON-008/F10 → ResearchLog.
+- **Data/engineering:** DataSpec → Decisions ADR-010/011 → Implementation → client/buffer source and tests.
+- **Reviewer:** goal → Conflicts + FailureModes → changed code/tests → QA checklist.
 
-**New contributor (30 min):**
-1. [`goal.md`](goal.md) → 2. [`Concept.md`](Concept.md) → 3. [`Axioms.md`](Axioms.md) + [`Invariants.md`](Invariants.md) →
-4. [`Physics.md`](Physics.md) §1–3 → 5. [`../README.md`](../README.md#getting-started) → 6. `pytest tests/ -v`
+## Organization and compatibility
 
-**Physicist:** Axioms → Physics → Symplectic → Decisions ADR-008 → Conflicts CON-008 → FailureModes F10
+Canonical documents live in `01_theory/`, `02_engineering/`, `03_research/`, `04_planning/`, and `05_reference/`. The root-level markdown files for moved documents are small compatibility stubs that link to their canonical locations; do not edit the stubs. `INDEX.md` and `prompt.md` are also compatibility entry points.
 
-**Engineer:** DataSpec → Implementation → Decisions ADR-010/011 → `src/fast_l2_client.py` → `src/tick_buffer.py` → `src/physics_jax.py`
-
-**QA / Reviewer:** Invariants → QA_Protocol → Conflicts + FailureModes → ResearchLog (2026-10-11)
-
----
-
-## Document Organisation — Current vs Planned
-
-**Current:** all 48 files are flat in `docs/` (intentional — avoids churn while Phases 0–2 are stabilising).
-
-**Planned (audit §2.2, not yet executed):**
-
-```
-docs/
-├── 01_theory/         Axioms, Concept, Physics, Invariants, Symplectic, …
-├── 02_engineering/    Decisions, Implementation, ToolSelection, DataSpec, QA_Protocol, …
-├── 03_research/       Conflicts, FailureModes, Hypotheses, ResearchLog, Changelog, …
-├── 04_planning/       roadmap, TaskQueue, MISSION_PROMPT, OpenProblems, …
-├── 05_reference/      Glossary, Notation, References
-└── README.md          ← you are here
-```
-
-A reorganisation will be a **pure move** (no content edits) with a redirect shim (`docs/<old>.md → docs/<new>/…`) and a single PR that updates every internal link. It is deferred until CON-008 is resolved to avoid mixing model changes with doc moves.
-
----
-
-## Conventions
-
-- **Time** is quantised in ticks (`TickModel.md`, `Decisions ADR-006`): one tick = one L2 `depth20@100ms` update.
-- **Inputs:** only raw L2 ticks (Axiom 1). No derived quantities are stored; physics quantities are recomputed at replay.
-- **G** is self-induced `G_eff = 1/⟨d²⟩` (Axiom 4), not a constant (ADR-007 rejected).
-- **Thresholds** in `Invariants.md` are fixed — tests never loosen them (`QA_Protocol P3`).
-- **Every doc link** in `README.md` and `docs/` uses the flat path `docs/<name>.md` until a reorg lands.
-
----
-
-## Related
-
-- [`../README.md`](../README.md) — project overview, requirements, tick-capture & replay examples
-- [`../CHANGES_TEMPLATE.md`](../CHANGES_TEMPLATE.md) — standard change-report format (policy-alignment checklist)
-- [`Invariants.md`](Invariants.md) — invariant table with test names & criteria (single source of truth)
+Internal links in maintained docs should target canonical paths. Preserve a compatibility stub when moving a file so older repository links continue to resolve. `README.md` at the repository root is the user-facing project overview; [`../CONTRIBUTING.md`](../CONTRIBUTING.md) and [`../CHANGES_TEMPLATE.md`](../CHANGES_TEMPLATE.md) describe contributor reporting.

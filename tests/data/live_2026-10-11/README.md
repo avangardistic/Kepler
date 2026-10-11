@@ -36,7 +36,7 @@ python -m src.fast_l2_client \
 
 ## Why it is committed
 
-`docs/FailureModes.md` F10 and `docs/Conflicts.md` CON-008 record that I1/I2
+`docs/03_research/FailureModes.md` F10 and `docs/03_research/Conflicts.md` CON-008 record that I1/I2
 fail when this data is replayed at `dt = 1` tick:
 
 | Path (2 000 ticks, dt = 1) | ‖L‖₀ | ‖L‖ₘₐₓ | E₀ | max relative energy drift |
