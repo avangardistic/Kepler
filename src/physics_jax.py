@@ -16,11 +16,15 @@ Axioms.md    — mass from volume (Axiom 3), self-consistent gravity (Axiom 4)
 
 from __future__ import annotations
 
+import logging
+
 import jax
 import jax.numpy as jnp
 from jax import lax
 from typing import Tuple
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 # Double precision is required: the energy-conservation criterion (I2) is
 # |ΔE|/|E₀| < 1e-9, which float32 (eps ≈ 1.2e-7) cannot meet.
@@ -497,6 +501,15 @@ def state_from_l2(bids_0: jnp.ndarray,
         q_tot = q_b + q_a
         # microprice = (q_a·p_b + q_b·p_a) / (q_b + q_a)
         if q_tot < EPSILON:
+            # Empty book is the self-freeze case (Falsifiability F2): total
+            # depth → 0 ⇒ mass → 0 ⇒ frozen body.  A debug log makes the
+            # edge case observable without polluting the hot path (use
+            # logging.DEBUG; callers that need diagnostics can enable it).
+            logger.debug(
+                "state_from_l2: empty book (q_tot=%.2e < EPSILON) → "
+                "microprice=0.0 (self-freeze; F2)",
+                float(q_tot),
+            )
             return 0.0
         num = q_a * p_b + q_b * p_a
         return jnp.log(num / q_tot)
@@ -512,6 +525,10 @@ def state_from_l2(bids_0: jnp.ndarray,
         q_a = _safe_sum_col(asks, 1) if asks.shape[0] > 0 else 0.0
         denom = q_b + q_a
         if denom < EPSILON:
+            logger.debug(
+                "state_from_l2: empty book (denom=%.2e < EPSILON) → imbalance=0.0",
+                float(denom),
+            )
             return 0.0
         return (q_b - q_a) / denom
 

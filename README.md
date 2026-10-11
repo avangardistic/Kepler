@@ -153,6 +153,9 @@ L_norm, energy, potential, imbalance = integrate(state, n_ticks=1000)
 ```
 Kepler/
 ├── docs/                    # Theory, axioms, decisions, conflicts, research log
+│   ├── README.md            # Documentation index / navigation hub (start here)
+│   ├── INDEX.md             # Alias of README.md
+│   └── *.md                 # 48 docs, flat for now (see docs/README.md §Organisation)
 ├── src/
 │   ├── __init__.py
 │   ├── fast_l2_client.py    # Phase 1: raw L2 WebSocket ingestion (T-001)
@@ -162,13 +165,16 @@ Kepler/
 │   ├── test_fast_l2_client.py
 │   ├── test_tick_buffer.py
 │   └── test_physics.py
+├── CHANGES_TEMPLATE.md      # Standard change-report format (QA_Protocol)
 ├── requirements.txt
 └── .gitignore
 ```
 
 ## Documentation
 
-Start here:
+> **Start with [`docs/README.md`](docs/README.md)** — the navigation hub that organises all 48 docs by topic (theory, engineering, quality, planning, reference) and suggests reading orders for new contributors, physicists, engineers and QA reviewers.
+
+Quick links:
 
 - [`docs/goal.md`](docs/goal.md): goals, constraints and anti-goals
 - [`docs/Concept.md`](docs/Concept.md): model definitions
@@ -182,6 +188,7 @@ Start here:
 - [`docs/FailureModes.md`](docs/FailureModes.md): known failure modes, including F10 (real-data invariant failure)
 - [`docs/prompt.md`](docs/prompt.md): entry prompt for a fresh agent session
 - [`docs/ResearchLog.md`](docs/ResearchLog.md) and [`docs/Changelog.md`](docs/Changelog.md): history
+- [`CHANGES_TEMPLATE.md`](CHANGES_TEMPLATE.md): policy-alignment checklist for every PR / session
 
 ## Known limitations
 
