@@ -475,6 +475,9 @@ class FastL2Client:
         self._closed = True
 
 
+# __all__ policy: only the public API is exported.  Internal helpers
+# ``_loads``, ``_levels`` and ``_websockets_connector`` are intentionally
+# excluded (underscore prefix = private, never imported by consumers).
 __all__ = [
     "FastL2Client",
     "L2Tick",

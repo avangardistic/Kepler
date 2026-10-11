@@ -102,3 +102,12 @@
   has no AVX2, and the default polars runtime refuses to run without it).
 - **Note:** the physics engine is unchanged. CON-008 means the real-data
   invariant results are currently negative and must not be reported as passes.
+
+## [2026-10-11] — Documentation & hygiene (audit)
+
+- **New:** `docs/README.md` navigation hub + `docs/INDEX.md` alias — categorised index of all 48 docs (theory, engineering, quality, planning, reference) with suggested reading orders; records the planned `01_theory … 05_reference` subdirectory layout as deferred until CON-008 is resolved. Addresses audit §2.1/§2.2.
+- **New:** `CHANGES_TEMPLATE.md` (repo root) — standard change-report format with policy-alignment checklist per `docs/QA_Protocol.md` and `docs/Invariants.md` (audit §3).
+- **New:** `CONTRIBUTING.md` — contributor workflow, per-change checklist, project structure and escalation path.
+- **Code hygiene:** `src/fast_l2_client.py` `__all__` policy clarified (internal `_loads`, `_levels`, `_websockets_connector` intentionally excluded); `src/physics_jax.py` `state_from_l2` now emits `logger.debug` on empty-book / zero-depth edge cases (self-freeze F2) instead of silently returning `0.0` (audit §1.1/§1.2).
+- **Docs:** `README.md` repository layout and documentation section updated to point to `docs/README.md` hub and `CHANGES_TEMPLATE.md`.
+- **Policy:** no invariant threshold changed, no external parameter added, no file moved — `pytest tests/ -v` still **41/41**. See `CHANGES_TEMPLATE.md §3` for the alignment checklist used.
