@@ -17,21 +17,30 @@
 ## Normalized Fields
 | Field | Type | Description |
 |------|-----|-------|
-| symbol | str | BTCUSDT |
-| bids | list[[float, float]] | 20 levels |
-| asks | list[[float, float]] | 20 levels |
-| ts_exchange | int ns | Exchange time |
-| ts_local | int ns | Receive time |
-| seq | int | lastUpdateId |
+| symbol | str | BTCUSDT (upper case) |
+| bids | list[[float, float]] | levels as received, best first, price and quantity unmodified |
+| asks | list[[float, float]] | same, ascending price |
+| ts_exchange | int ns | Exchange time. **0 when the stream provides none** (the `depth20` snapshot payload has no `E` field — see CON-007) |
+| ts_local | int ns | Receive time, always set from the local clock |
+| seq | int | lastUpdateId of the snapshot; 0 when absent |
+| tick_index | int | Arrival ordinal — the tick quantum (TickModel.md). Strictly increasing within a dataset |
+
+Level count is whatever the stream sent (≤ 20). Raw JSON price/quantity strings are decoded to `float64`; nothing else is transformed (`src/fast_l2_client.py`).
 
 ## Storage
-- Format: Parquet
-- Compression: zstd
-- Partition: symbol / day
+- Format: Parquet, compression: zstd
+- Partition: `symbol=<S>/day=<YYYY-MM-DD>` (UTC day of `ts_local`)
+- File naming: `part-NNNN.parquet`, one file per flush, numbering continues across sessions so a reopened store never overwrites existing data
+- One row per tick. Columns: `tick_index`, `symbol`, `seq`, `ts_exchange_ns`, `ts_local_ns`, `bid_prices`, `bid_quantities`, `ask_prices`, `ask_quantities` (the four level columns are `List(Float64)`, so level counts may vary per row)
+- Writer: `polars` (Implementation.md §2); reader: `src/tick_buffer.py`
 - Estimated size: 1 GB for 10M ticks
+- Replay order: rows sorted by `tick_index` across partitions, so the same dataset always yields the same sequence
+- No derived quantities are stored: microprice, mass, imbalance, G and energy are recomputed at replay time (Axiom 1)
 
 ## Validation
 - bids strictly descending
 - asks strictly ascending
 - best_bid < best_ask
 - All volumes > 0
+
+Validation is **recorded, not enforced**: a tick that fails any rule is still stored and replayed (the client increments `TickStats.invalid_books`). Repairing or dropping it would be a filter (goal.md) and would hide the jump-to-zero case the physics must survive (Falsifiability.md F2).

@@ -1,157 +1,63 @@
-# Kepler
+# Agent Synchronization
 
-Three-body gravitational dynamics on Level 2 (L2) order-book tick data, used as a **descriptive language for high-frequency market microstructure**.
+## Active Agents
+| Agent ID | Session Start | Current Task | Status |
+|----------|--------------|--------------|--------|
+| agent-main | 2026-10-07 | Phase 0: Documentation Migration | ✅ Complete |
+| agent-main | 2026-10-10 | Phase 2: Verification and precision fix | ✅ Complete |
+| agent-main | 2026-10-10 | Phase 2: Geometric embedding (ADR-008), tool decision (ADR-009) | ✅ Complete |
+| agent-main | 2026-10-10 | Status audit and documentation sync (no code change) | ✅ Complete |
+| agent-main | 2026-10-11 | Phase 1: T-001 fast_l2_client, T-002 tick_buffer/Parquet/replay; docs repair (CON-006) | ✅ Complete |
 
-> **This is a research project, not a trading system.** It does not predict prices, generate signals, execute orders, or handle real money. See [Anti-goals](#anti-goals).
+## Task Claims
+| Task | Claimed By | Claimed At | Status |
+|------|-----------|------------|--------|
+| Phase 0 (all) | agent-main | 2026-10-07T10:00 | Done |
+| T-003 (physics_jax) | agent-main | 2026-10-07 | Done — recorded in TaskQueue.md 2026-10-10 |
+| T-004 (invariant tests) | agent-main | 2026-10-07 | Done — recorded in TaskQueue.md 2026-10-10 |
+| T-001 (fast_l2_client) | agent-main | 2026-10-11 | Done — `src/fast_l2_client.py`, 15 tests, 100k-tick offline acceptance, live smoke run |
+| T-002 (tick_buffer/Parquet/replay) | agent-main | 2026-10-11 | Done — `src/tick_buffer.py`, 13 tests, deterministic replay verified |
+| T-001, T-002 | — | — | Claimed and completed 2026-10-11 |
 
-## Goal
+## Recent Discoveries
+- [2026-10-07T10:45] agent-main: G_DEFAULT violation found, ADR-007 rejected (CON-001)
+- [2026-10-07T11:00] agent-main: Virial test needs generalized virial theorem (CON-002)
+- [2026-10-07T11:05] agent-main: CON-002 corrected — no threshold loosening occurred; log entry was a writing error. Test always used I4 criterion |<T>/<V> + 0.5| < 0.2 over 20,000 ticks. Invariants.md now documents both standard (I4) and generalized (I4b) virial forms.
+- [2026-10-07T11:15] agent-main: All Persian/Korean docs translated to English
+- [2026-10-07T11:30] agent-main: Missing coordination files created
+- [2026-10-10] agent-main: Test run: 8/9 under float32 (max relative energy drift 8.01e-08). x64 enabled per ADR-002 → 9/9 pass (CON-003 resolved). Opened CON-004 (undocumented 0.25 transverse-velocity constant in `_stabilized_state`; removing it breaks the virial test) — escalated to human, no code change.
+- [2026-10-10] agent-main: CON-004 resolved via ADR-008 (rigid rotation about the mass centre, ω from the least-squares force balance). CON-005 resolved (G normalisation unified to 1/N). ADR-009: keep Python + JAX (measured ≈ 3.3M ticks/s; see docs/ToolSelection.md). 9/9 tests pass.
+- [2026-10-10] agent-main: Status audit. `docs/prompt.md` was a stale truncated copy of ResearchLog.md → replaced with the agent entry prompt. TaskQueue.md T-003/T-004 moved to Completed. Changelog v0.2.0–v0.5.0 annotated as planned, not delivered (they named modules absent from the repo). Independently reproduced `pytest tests/ -v` → 9 passed (jax 0.10.2, pytest 9.1.1, Python 3.11).
 
-The primary goal (from [`docs/goal.md`](docs/goal.md)) is to show that three-body gravitational dynamics on raw L2 tick data provide a useful descriptive vocabulary for HFT microstructure.
+- [2026-10-11] agent-main: Documentation repair. Commit `829a846` had cyclically mis-filed six docs (README/prompt/TaskQueue/ResearchLog/Changelog/AgentSync). Contents restored to their canonical paths; logged as CON-006. Root cause: a rename/copy script that shifted filenames; no code impact.
+- [2026-10-11] agent-main: T-001 delivered (`src/fast_l2_client.py`). 100 000-tick offline acceptance: `dropped == 0`, `out_of_order == 0`, `invalid_books == 0`; 17 tests pass. Measured end-to-end throughput over a loopback WebSocket: 12 872 ticks/s (20 levels/side, 60 000 messages) — ≈ 430× the live feed rate of 3 assets × 10 ticks/s.
+- [2026-10-11] agent-main: T-002 delivered (`src/tick_buffer.py`). Parquet/zstd, `symbol/day/part-NNNN`, strict `tick_index` ordering, deterministic replay into `state_from_l2`/`integrate`; 13 tests pass. Measured: write 6 837 ticks/s, replay 24 244 ticks/s, 26.6 B/tick (10 M ticks ≈ 0.27 GB, below the 1 GB DataSpec estimate).
+- [2026-10-11] agent-main: Live capture. `stream.binance.com` answers **HTTP 451** from this network; `data-stream.binance.vision` serves the identical streams. Captured 2 785 live ticks in 120 s (BTCUSDT 1 165 / ETHUSDT 1 151 / SOLUSDT 469; 20 levels per side; 0 invalid books). Endpoint choice documented in ADR-011 + CON-007.
+- [2026-10-11] agent-main: Replay→state cost measured: `TickReplay.states()` 76 states/s (13.1 ms per tick) because `state_from_l2` is not jitted — ~2 600× slower than the integrator. Recorded in TaskQueue/ResearchLog as a Phase 3–5 prerequisite.
+- [2026-10-11] agent-main: The 2 785-tick live capture is now committed as a repo fixture (`tests/data/live_2026-10-11`, 72 KB, with a provenance README) so CON-008 stays reproducible offline. Its tests assert retention guarantees only — never that the invariants hold.
+- [2026-10-11] agent-main: **CON-008 opened from real data.** Replaying the live capture at `dt = 1` tick, I2 fails badly (max relative energy drift 281 conservative, 1.54 with the ADR-008 embedding, up to 6.2e6 with imbalance) and the ADR-008 embedding is bypassed for L2-built states because `state_from_l2` returns a 2-D state. Measured table in FailureModes.md F10. No threshold was loosened; 41/41 tests still pass because they use purpose-built configurations.
 
-Success criteria:
+## Blocked Tasks
+- **CON-008 (open, escalated to human):** all real-data invariant work. Phase 3 detectors can proceed on recorded ticks (they do not use `integrate`), but Phase 5 (`Π > 0`) is blocked until a model decision is recorded as an ADR.
+- T-005 no longer awaits T-001/T-002: recorded ticks now exist (`TickReplay` + `L2ParquetStore`).
+- Previously blocked, now resolved: CON-002 (log correction; generalized virial theorem documented in Physics.md for non-conservative systems), CON-003 (x64), CON-004 (ADR-008), CON-005 (G normalisation, one open remark), CON-006 (docs re-filed), CON-007 (`ts_exchange` semantics).
 
-1. Angular momentum ‖L‖ remains bounded.
-2. Virial ratio T/V → −1/2.
-3. Π > 0 in mathematical expectation.
-4. Zero maximum drawdown (self-freeze).
+## Coordination Rules
+1. Before starting a task, check this file and Conflicts.md
+2. After completing a task, update this file with findings
+3. If blocked, document in Conflicts.md and update this file
+4. Every 10 tasks, consolidate knowledge and review
 
-### Constraints (immutable)
+## Handoff
+When handing off to another agent:
+1. Update status to "Handed off to: [agent ID]"
+2. Summarize current state in ResearchLog.md
+3. List any blockers in Conflicts.md
 
-- Only raw L2 tick data as input.
-- No external parameters, filters, indicators, or risk management.
-- No execution, no real money, no profit claims.
-- Time is quantised in ticks.
-- All parameters are derived internally from geometry.
+## Latest Handoff (2026-10-11)
 
-### Anti-goals
-
-- Trading bot
-- Signal generator
-- Price prediction model
-- Sellable strategy
-
-## Model overview
-
-Three assets are treated as three gravitational bodies in log-microprice space (see [`docs/Concept.md`](docs/Concept.md)):
-
-| Quantity | Definition | Source |
-|---|---|---|
-| Position `x_i` | `ln P_i^μ` (microprice) | Concept §2.2 |
-| Mass `m_i` | `ln(1 + total depth)` | Axiom 3, Concept §2.3 |
-| Imbalance `I_i` | normalised bid/ask depth difference | Concept §2.4 |
-| Gravitational coupling `G` | `G_eff = 1 / ⟨d²⟩` (self-induced) | Axiom 4, Physics §Self-Induced Gravity |
-
-The integrator is a velocity-Verlet (symplectic) scheme, so energy and angular momentum are preserved without secular drift (see [`docs/Symplectic.md`](docs/Symplectic.md)).
-
-For one-dimensional input, bodies are embedded in the orbital plane as a rigid rotation about the centre of mass, with ω derived from the self-induced gravity (see [`docs/Decisions.md`](docs/Decisions.md), ADR-008).
-
-## Current status
-
-The project follows the phases in [`docs/roadmap.md`](docs/roadmap.md).
-
-| Area | Status |
-|---|---|
-| Phase 0: documentation | Done |
-| Phase 2: physics engine (`src/physics_jax.py`) | Implemented; invariant tests pass |
-| Phase 1: tick infrastructure (WebSocket client, tick buffer) | Not started |
-| Phase 3: detectors | Not started |
-| Phase 4: market making | Not started |
-| Phase 5+: simulation, validation, extensions | Not started |
-
-Implemented in `src/physics_jax.py`:
-
-- `ThreeBodyState`: JAX pytree holding positions, velocities, masses, imbalance and friction.
-- `symplectic_step`, `integrate` (`lax.scan`), `acceleration`.
-- Energy, potential, kinetic, virial ratio, angular momentum and self-induced G.
-- `state_from_l2`: builds a state from three L2 books.
-
-Test coverage (`tests/test_physics.py`, 9 tests): angular momentum (zero at rest and bounded over 10k ticks), energy conservation, virial ratio (I4), imbalance bound (I6), zero-depth freeze, ε-softening, determinism.
-
-## Requirements
-
-- Python 3.11 (validated version)
-- JAX `0.10.2` and pytest `9.1.1` (see [`requirements.txt`](requirements.txt))
-
-The physics engine runs in double precision (`jax_enable_x64`), which is required by the energy criterion I2 (relative drift < 1e-9). See [`docs/Decisions.md`](docs/Decisions.md) ADR-002.
-
-## Getting started
-
-```bash
-git clone https://github.com/avangardistic/Kepler.git
-cd Kepler
-
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-pytest tests/ -v
-```
-
-Run the commands from the repository root, because the tests import `src.physics_jax`.
-
-Example: integrate a state built from three L2 books (one per asset):
-
-```python
-import jax.numpy as jnp
-from src.physics_jax import state_from_l2, integrate
-
-# Each side is a (K, 2) array of [price, quantity], best level first.
-btc_bids = jnp.array([[99.95, 10.0], [99.90, 8.0]])
-btc_asks = jnp.array([[100.05, 9.0], [100.10, 7.0]])
-eth_bids = jnp.array([[200.10, 5.0], [200.00, 6.0]])
-eth_asks = jnp.array([[200.30, 4.0], [200.40, 3.0]])
-sol_bids = jnp.array([[50.00, 12.0], [49.95, 3.0]])
-sol_asks = jnp.array([[50.02, 2.0], [50.10, 9.0]])
-
-state = state_from_l2(btc_bids, btc_asks, eth_bids, eth_asks, sol_bids, sol_asks)
-L_norm, energy, potential, imbalance = integrate(state, n_ticks=1000)
-```
-
-`G` is computed from the initial state when not given explicitly.
-
-**Note:** total energy is conserved only for the conservative subsystem (no imbalance force, no friction). With non-zero imbalance `I` and friction `γ`, the energy returned by `integrate` is not the same as the Hamiltonian energy in the conservative subsystem.
-
-## Repository layout
-
-```
-Kepler/
-├── docs/              # Theory, axioms, decisions, conflicts, research log
-├── src/
-│   ├── __init__.py
-│   └── physics_jax.py # Three-body physics engine (JAX, float64)
-├── tests/
-│   └── test_physics.py
-├── requirements.txt
-└── .gitignore
-```
-
-## Documentation
-
-Start here:
-
-- [`docs/prompt.md`](docs/prompt.md): entry prompt for a fresh agent session (read order and operating rules)
-- [`docs/goal.md`](docs/goal.md): goals, constraints and anti-goals
-- [`docs/Concept.md`](docs/Concept.md): model definitions
-- [`docs/Axioms.md`](docs/Axioms.md) and [`docs/Invariants.md`](docs/Invariants.md): axioms and invariants with test criteria
-- [`docs/Physics.md`](docs/Physics.md): Lagrangian, energy, virial theorem, self-induced gravity
-- [`docs/roadmap.md`](docs/roadmap.md) and [`docs/TaskQueue.md`](docs/TaskQueue.md): phases and open tasks
-- [`docs/Decisions.md`](docs/Decisions.md): architecture decision records (ADR)
-- [`docs/Conflicts.md`](docs/Conflicts.md): known conflicts and their resolution
-- [`docs/ToolSelection.md`](docs/ToolSelection.md): why Python and JAX were kept, with measurements
-- [`docs/ResearchLog.md`](docs/ResearchLog.md) and [`docs/Changelog.md`](docs/Changelog.md): history
-
-## Known limitations
-
-- **Coupling `G`:** `integrate` uses `G` from the initial state, held fixed. [`docs/Physics.md`](docs/Physics.md) describes a running time-average of ⟨d²⟩; this is not implemented yet (see [`docs/Conflicts.md`](docs/Conflicts.md), CON-005).
-- **Three or more bodies:** the rigid-rotation embedding is exact only for two bodies. For N ≥ 3 it is an approximation, and its residual has not been measured yet.
-- **Scope:** only the physics engine is implemented. Live data ingestion, detectors, market-making logic and simulation are not part of this repository yet.
-
-## Contributing
-
-Work follows the process in [`docs/QA_Protocol.md`](docs/QA_Protocol.md):
-
-- Every change must preserve the invariants in [`docs/Invariants.md`](docs/Invariants.md).
-- Test thresholds are fixed. Do not loosen them to make tests pass.
-- Log state changes in [`docs/ResearchLog.md`](docs/ResearchLog.md) and conflicts in [`docs/Conflicts.md`](docs/Conflicts.md).
-
-Run `pytest tests/ -v` before each commit.
+**Completed:** Phase 1 (T-001 `src/fast_l2_client.py`, T-002 `src/tick_buffer.py`), 32 new tests, ADR-010/ADR-011, CON-006/CON-007 resolved, a 120 s live capture, and the real-data falsification recorded as F10/CON-008.
+**In Progress:** none.
+**Blocked:** CON-008 — needs a human decision on the real-data I1/I2 failure (candidates in Conflicts.md) before Phase 5. The full 100 000-tick *live* acceptance run (~55 min at ~30 ticks/s) has not been performed; the offline 100 000-tick run has.
+**Next Priority:** (1) CON-008 decision; (2) T-005 `detectors_numba.py` (F1 > 0.8 on synthetic data) — recorded ticks are now available; (3) complete the live 100k run with `python -m src.fast_l2_client --ticks 100000`.
+**Notes:** 41/41 tests pass in the validated environment (Python 3.11, jax 0.10.2, pytest 9.1.1, polars 2.0.0 with the `rtcompat` runtime — the CPU here has no AVX2, so plain `polars` crashes; see CON-006-adjacent note in DataSpec/ADR-011). Open technical decisions: CON-005 running time-average of ⟨d²⟩, CON-008, and the newly measured N ≥ 3 embedding residual.

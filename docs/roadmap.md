@@ -8,6 +8,14 @@
 ## Phase 1: Tick Infrastructure
 - DataSpec, TickModel, fast_l2_client, tick_buffer, replay
 - Exit criteria: 100,000 ticks without drop
+- Status (2026-10-11): **code complete and verified offline.**
+  `src/fast_l2_client.py` (raw `depth20@100ms` snapshots) and
+  `src/tick_buffer.py` (Parquet/zstd store + deterministic replay) exist with
+  tests; the 100,000-tick acceptance run passes with `dropped == 0` and
+  `out_of_order == 0` against an injected/in-process source and a loopback
+  WebSocket. A live public-feed run has **not** been performed (the sandbox
+  used for verification is offline), so the exit criterion is verified
+  offline only.
 
 ## Phase 2: Physics
 - Physics, physics_jax, Invariants

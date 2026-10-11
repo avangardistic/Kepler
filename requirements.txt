@@ -1,3 +1,11 @@
 # Versions used for the validated test run (Python 3.11).
 jax==0.10.2
 pytest==9.1.1
+
+# Phase 1 tick infrastructure (T-001 / T-002), validated on the same run.
+websockets==17.2   # raw L2 WebSocket feed (Implementation.md §2)
+orjson==3.13.0     # ADR-004 JSON decoder; optional at runtime (ADR-010)
+polars==2.0.0      # Parquet + zstd storage (DataSpec.md §Storage, ADR-011)
+
+# uvloop is intentionally NOT pinned: it has no Windows implementation and is
+# imported opportunistically by src/fast_l2_client.py (ADR-004, ADR-010).

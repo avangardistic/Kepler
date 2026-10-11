@@ -79,3 +79,30 @@ entry has been corrected in Conflicts.md.
 **Rationale:** Measured on the sandbox (2 CPU cores, JAX 0.10.2): `symplectic_step` inside `lax.scan` runs at ≈ 3.3 M ticks/s. 10 M ticks (Phase 5) ≈ 3 s. No performance requirement in the docs is violated.
 **Full analysis:** docs/ToolSelection.md (5 Whys).
 **Revisit when:** live WebSocket ingestion (Phase 1) or the market-maker loop (Phase 4) show a measured bottleneck.
+
+## ADR-010: uvloop and orjson are used "where applicable" (optional dependencies)
+**Date:** 2026-10-11
+**Status:** Accepted
+**Decision:** `src/fast_l2_client.py` imports `orjson` and `uvloop` opportunistically and falls back to the standard library:
+- JSON: `orjson.loads` when importable, otherwise `json.loads` (byte-identical results, no schema differences).
+- Event loop: `uvloop.EventLoopPolicy()` when importable; the stdlib `asyncio` policy otherwise. `install_event_loop_policy()` returns which one is active.
+**Rationale:** ADR-004 names uvloop and orjson for speed. uvloop has **no Windows implementation** (the validated environment for this project is Windows + Python 3.11), and pinning orjson as a hard requirement would make the client unimportable where it cannot be built. Both are pure accelerators: neither changes any tick field, and the tests assert that the client works with either decoder.
+**Verification:** tests cover both branches — `install_event_loop_policy()` must return `"asyncio"` (and `HAS_UVLOOP` must be `False`) on Windows, and parsing must succeed whichever JSON module is present.
+**Rejected alternatives:** hard-importing uvloop (breaks Windows); vendoring a C JSON decoder (needless).
+**Consequences:** on POSIX the caller can opt in with `install_event_loop_policy()`; on Windows the client runs on stdlib asyncio, so ADR-004 is satisfied "where applicable". Throughput is measured in docs/ResearchLog.md.
+
+## ADR-011: Phase 1 feed and storage format
+**Date:** 2026-10-11
+**Status:** Accepted
+**Decision:**
+1. **Feed:** Binance combined stream `btcusdt@depth20@100ms/ethusdt@depth20@100ms/solusdt@depth20@100ms` — raw **snapshots**, not diffs.
+2. **Storage:** Parquet with `zstd`, one row per tick, level arrays in variable-length `List(Float64)` columns, partitioned `symbol=<S>/day=<YYYY-MM-DD>/part-NNNN.parquet`.
+3. **Writer:** `polars` (docs/Implementation.md §2), flush-based buffering with a bounded in-memory block.
+4. **Replay alignment:** one tick = one L2 update (Axiom 2); a three-body state is emitted for every tick once all three assets have a book, using each asset's latest snapshot (latest-wins).
+**Rationale:** Diff-depth streams require local book reconstruction, which is processing the raw input and would violate `docs/goal.md` ("no filters, no indicators", Axiom 1). Snapshots are exactly what DataSpec.md specifies (`depth20@100ms`) and keep the client a pure decoder. Parquet/zstd and the `symbol/day` partition are already prescribed by DataSpec.md §Storage. Latest-wins alignment keeps replay deterministic without inventing an interpolation (interpolation would be derived data).
+**Rejected alternatives:** diff-depth + local book (processing, ordering hazards); CSV/JSONL storage (DataSpec prescribes Parquet); interpolating books to a common timestamp (derived data, violates Axiom 1); pairing ticks by index across symbols (misaligns when message rates differ).
+**Consequences:**
+- The snapshot payload carries no exchange timestamp → `ts_exchange_ns = 0` for this feed (CON-007).
+- Snapshot gaps in `lastUpdateId` are normal and are **not** counted as drops; only a sequence regression is an ordering violation.
+- Storage must never store derived quantities: model quantities are recomputed at replay time.
+**Verification:** offline acceptance test delivers 100 000 ticks with `dropped == 0` and `out_of_order == 0`; round-trip and replay tests confirm all fields, ordering and determinism. See docs/TaskQueue.md T-001/T-002 and docs/ResearchLog.md (2026-10-11).
