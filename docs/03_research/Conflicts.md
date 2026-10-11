@@ -2,7 +2,7 @@
 
 ## Current status
 
-Open: **CON-008** (model decision) and **CON-009** (scope decision). CON-010 is closed as a documentation clarification. A conflict may remain open at handoff; do not resolve it without evidence or a maintainer decision.
+Open: **CON-008** (model decision), **CON-009** (scope decision), and **CON-011** (implementation vs documented L2→state formulas). CON-010 is closed as a documentation clarification. A conflict may remain open at handoff; do not resolve it without evidence or a maintainer decision.
 
 ## CON-001: ADR-007 G_DEFAULT violates Axiom 4
 **Date:** 2026-10-07
@@ -119,6 +119,15 @@ I2 requires a relative drift < 1e-9; every path misses it by many orders of magn
 **Resolution:** Clarify that “no risk management” is an offline-scope boundary only. The docs now explicitly state that risk is not solved, no financial controls exist, and no result implies safety. No code, invariant, or threshold changed.
 **Status:** RESOLVED — 2026-10-11 (documentation clarification only).
 
+## CON-011: `state_from_l2` does not follow the documented L2→state formulas (OPEN — implementation/doc mismatch)
+**Date:** 2026-10-11
+**Files:** `src/physics_jax.py` (`state_from_l2._microprice`, `state_from_l2._gamma`) vs `../01_theory/Microprice.md`, `../01_theory/Concept.md` §2.2 and §2.5, and `../02_engineering/Decisions.md` ADR-001.
+**Description:** The documented position is built from the standard level-1 microprice `P^μ = (q₁ᵃp₁ᵇ + q₁ᵇp₁ᵃ)/(q₁ᵃ+q₁ᵇ)`, which uses the best bid and ask **prices**. The implementation instead sums each side's whole price column and evaluates `(Q_a·Σp_b + Q_b·Σp_a)/(Q_a + Q_b)`, where `Σp` is the sum of the received level prices (up to 20 levels per side). That value is neither the documented level-1 microprice nor the documented volume-weighted mid; it shifts `x_i = ln P^μ` by a level-count-dependent term. Separately, `_gamma` divides the spread by that same log-price `x_i`, while `Concept.md` §2.5 defines `γ_i = (p₁ᵃ − p₁ᵇ)/P^μ` with the microprice as a price — so the friction coefficient is evaluated on a different scale than documented.
+**Severity:** HIGH — this is the model input for every real-data state, and the recorded CON-008/F10 measurements were computed with this construction. Correcting it could change the I1/I2 outcomes.
+**Evidence:** `_microprice` calls `_safe_sum_col(bids, 0)` / `_safe_sum_col(asks, 0)` (the price columns) and returns their log; `_gamma(spread, x_i)` receives that log value. No test asserts the microprice or gamma formula: the L2-built fixtures only check invariants, and the two-body virial test constructs its `ThreeBodyState` directly with `gamma = 0`.
+**Decision needed:** (a) correct the implementation to the documented level-1 microprice and price-scaled friction, then re-run the CON-008 measurements; or (b) record the aggregate construction as the intended model input in an ADR and update Microprice.md/Concept.md/ADR-001 to match. Do not change this silently, and do not touch any invariant threshold.
+**Status:** OPEN — maintainer decision required.
+
 ## Conflict Resolution Rules
 
 1. Follow applicable platform/safety instructions and the maintainer's explicit, current scope decision.
@@ -139,3 +148,4 @@ I2 requires a relative drift < 1e-9; every path misses it by many orders of magn
 | 2026-10-11 | CON-008: I1/I2 fail on real L2 replay at dt = 1 tick | **OPEN** — measured (F10); four candidate directions; maintainer decision required |
 | 2026-10-11 | CON-009: quote-generation spec conflicts with anti-goals | **OPEN** — T-006 blocked pending scope decision |
 | 2026-10-11 | CON-010: unsupported “risk solved by geometry” claim | RESOLVED — wording corrected; no code or threshold changed |
+| 2026-10-11 | CON-011: `state_from_l2` microprice/gamma differ from the documented formulas | **OPEN** — maintainer decision required; no threshold touched |

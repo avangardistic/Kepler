@@ -24,7 +24,7 @@ python -m pytest -q
 - Never add exchange execution, actionable quotes, trading signals, or risk-safety claims.
 - Preserve invariant thresholds. A proposed scientific criterion change requires an explicit decision and rationale.
 - Distinguish synthetic tests, offline replay, and live-feed evidence. Do not present one as another.
-- If a model/scope decision is unresolved, document the options and blocker instead of guessing. CON-008 remains open; T-006 is blocked by a separate scope question.
+- If a model/scope decision is unresolved, document the options and blocker instead of guessing. CON-008 and CON-011 remain open; T-006 is blocked by a separate scope question.
 - Update only the docs whose facts or decisions changed. Record material research evidence and notable user-facing changes; do not churn history for a typo fix.
 - Optional external trackers are not assumed. See [`docs/04_planning/Paperclip_Coordination.md`](docs/04_planning/Paperclip_Coordination.md).
 

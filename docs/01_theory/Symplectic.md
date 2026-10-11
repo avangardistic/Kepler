@@ -1,5 +1,9 @@
 # Symplectic Integration
 
+> The implemented path is velocity-Verlet (`symplectic_step` in
+> `src/physics_jax.py`); the constraint-manifold projection (§4) and the IMEX
+> row in §6 are proposals, not implemented behavior.
+
 ## 1. Why Symplectic?
 Ordinary integrators (Euler, RK4) lose energy over time.
 Symplectic preserves the geometric structure.

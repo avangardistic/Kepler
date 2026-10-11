@@ -1,5 +1,9 @@
 # Concept
 
+> Model vocabulary and definitions, not results. Status is tracked in
+> [`../02_engineering/Implementation.md`](../02_engineering/Implementation.md),
+> [`Invariants.md`](Invariants.md), and [`../03_research/Conflicts.md`](../03_research/Conflicts.md).
+
 ## 1. Big Picture
 Three assets (BTC, ETH, SOL) as three gravitational bodies in log-microprice space.
 Time advances by **tick**.
@@ -44,7 +48,7 @@ $$
 \Phi_i(p) = -\sum_k \frac{G\,q_k^{b,i}}{|p - p_k^{b,i}|} - \sum_k \frac{G\,q_k^{a,i}}{|p - p_k^{a,i}|}
 $$
 
-## 5. Hedge Constraint
+## 5. Hedge Constraint (proposal — no execution)
 $$
 h_{ij} = \frac{m_j \cdot |I_i|}{m_i \cdot |I_j| + m_j \cdot |I_i|}
 $$
@@ -57,10 +61,20 @@ $$
 \vec L = \sum_{i=1}^{3} m_i\,(\mathbf{x}_i \times \mathbf{v}_i)
 $$
 
-## 8. Profit
+## 8. Work Functional (Π) — not profit
 $$
-\Pi = \iint_A \vec L\, dA
+\Pi = \iint_A \vec L\, dA \quad \text{(earlier draft form)}
 $$
 
-## 9. Ten L2 States
+`Π` is the proposed mathematical work functional defined in
+[`Axioms.md`](Axioms.md) Axiom 7 (`Π = ∮ p · dx`). The earlier "profit" label
+and the alternative integral form above are historical wording: `Π` is not
+realized profit, P&L, or a profitability claim, and no experiment for it has
+been defined yet.
+
+## 9. Ten L2 States (proposal)
 Balanced, Bid-heavy, Ask-heavy, Thin, Thick, Spoof, Iceberg, Sweep, Flash, Squeeze.
+
+Draft taxonomy only: no classifier or automatic response is implemented. See
+[`../03_research/RegimeCatalog.md`](../03_research/RegimeCatalog.md) and the
+detector draft in [`../02_engineering/Detectors.md`](../02_engineering/Detectors.md).

@@ -42,9 +42,10 @@ For systems with external forces and friction (Concept.md §3). The standard for
 **Test criterion:** `test_virial_ratio_convergence` in `tests/test_physics.py`
 computes the time-averaged ratio `<T>/<V>` after skipping an equilibration
 period of 5,000 ticks and checks `|<T>/<V> + 0.5| < 0.2`. This matches the
-I4 invariant criterion exactly. (A prior migration log entry claimed the test
-threshold was "loosened to 1e-5" — that was a writing error; the test has
-always used the I4 criterion above.)
+I4 invariant criterion exactly. For the correction of an earlier log entry that
+claimed this threshold was "loosened to 1e-5", see
+[`../03_research/Conflicts.md`](../03_research/Conflicts.md) CON-002 (a writing
+error; the test has always used the I4 criterion above).
 
 ### I5 — Total Mass
 $$
@@ -62,14 +63,19 @@ $$
 $$
 
 ## Tests
+
+Only the tests that exist in `tests/` are listed. I3 and I5 have no
+implementation and no test — the older `test_mm.py`/`test_sim.py` entries were
+legacy plans, and those files were never added.
+
 | Invariant | Test | Criterion |
 |-----------|------|-----------|
-| I1 | `test_physics.py` | Relative error < 1e-9 |
-| I2 | `test_physics.py` | Same |
-| I3 | `test_mm.py` | |φ| < 1e-6 |
-| I4 | `test_physics.py` | |<T>/<V> + 0.5| < 0.2 (standard form for conservative subsystem; generalized form required when friction and external forces are present) |
-| I5 | `test_sim.py` | drift < 1% |
-| I6 | `test_physics.py`, `test_tick_buffer.py` | Always (`|I_i| ≤ 1`) |
+| I1 | `test_physics.py` (`test_angular_momentum_bounded_over_10k_ticks`; the two-body virial test also records `L_max`) | `‖L‖ ≤ 10·⟨‖L‖⟩` in at least 95% of 10,000 ticks on the symmetric synthetic state; `L_max < 1.0` in the two-body virial test (threshold unchanged, ADR-008). Not a real-data criterion; see CON-008 |
+| I2 | `test_physics.py` (`test_energy_conservation_relative_drift`) | Relative drift < 1e-9 over a few hundred ticks on a synthetic state; fails on real replay (CON-008) |
+| I3 | — | Not implemented; no test. The hedge constraint is a proposal only (Axiom 5) |
+| I4 | `test_physics.py` (`test_virial_ratio_convergence`) | \|<T>/<V> + 0.5\| < 0.2 (standard form for conservative subsystem; generalized form required when friction and external forces are present) |
+| I5 | — | Not implemented; no test. Replay states take data-derived mass each tick (Axiom 3), so this applies only to a hypothetical closed simulation |
+| I6 | `test_physics.py`, `test_tick_buffer.py` | Always (`\|I_i\| ≤ 1`) |
 | I7 | `test_fast_l2_client.py`, `test_tick_buffer.py` | `best_bid < best_ask` checked on every ingested tick and at construction |
 
 ## Phase 1 (tick infrastructure) guarantees

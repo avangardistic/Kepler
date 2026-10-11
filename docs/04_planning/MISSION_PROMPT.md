@@ -22,6 +22,7 @@ For most tasks, read only the relevant sections instead of loading every documen
 - The recorded offline acceptance run covered 100,000 ticks with zero drops and ordering errors; a 2,785-tick live capture is committed under `tests/data/live_2026-10-11/`. A full 100,000-tick live run has not been recorded.
 - **Physics code exists:** `src/physics_jax.py` implements a JAX three-body model. The recorded suite has 41 passing tests in its pinned environment, but those results do not establish real-data validity.
 - **CON-008 is open:** the captured real-data replay violates the I1/I2 criteria in tested paths at `dt = 1`. Do not claim otherwise, tune thresholds, or pick a model resolution without the maintainer decision.
+- **CON-011 is open:** `state_from_l2` does not compute the documented level-1 microprice (it sums prices across levels) and scales friction by a log price. Do not silently "fix" it or restate the formulas without the maintainer decision.
 - **T-005 (detectors)** is data-unblocked and can be designed without the physics integration, but its draft must reconcile seconds-based thresholds with tick-time/no-filter constraints before implementation. **T-006** is blocked by a project-scope conflict. **T-007 / Phase 5** is blocked by CON-008 and the unfinalized `Π` experiment.
 - Detector, quote-generation, and long-run simulation code are not implemented. A plan or mathematical sketch is not an implementation.
 

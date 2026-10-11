@@ -32,7 +32,9 @@ python -m src.fast_l2_client \
 * Parquet + zstd, partitioned `symbol=<S>/day=2026-10-11/part-0001.parquet`
   (verified with `src.tick_buffer.parquet_codecs`, which needs no extra
   dependency).
-* Size: 72 KB (26.6 bytes/tick).
+* Size: 68,090 bytes across the three committed part files (≈24.5 bytes/tick).
+  The capture-time log recorded 72 KB (26.6 bytes/tick); both figures are kept
+  for traceability.
 
 ## Why it is committed
 

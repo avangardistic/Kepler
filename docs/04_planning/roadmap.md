@@ -30,7 +30,7 @@ The test count and environment below are historical verification evidence, not a
 
 ## Next work
 
-1. Record a maintainer decision for **CON-008** before further real-data claims about I1/I2 or Phase 5.
+1. Record a maintainer decision for **CON-008** before further real-data claims about I1/I2 or Phase 5, and for **CON-011** (documented vs implemented microprice/friction) before trusting any real-data state.
 2. **T-005** is the next unblocked implementation task in [`TaskQueue.md`](TaskQueue.md).
 3. **T-006** remains blocked by the scope mismatch between quote generation and the project's anti-goals.
 4. Improve replay-to-state throughput only with a before/after benchmark and unchanged behavior.

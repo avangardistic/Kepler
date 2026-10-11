@@ -1,5 +1,8 @@
 # Differential Geometry Extensions
 
+> Proposal/notes for a possible future extension. Nothing here is implemented,
+> and the free parameters (`λ(t)`, `α`) are not derived from the model geometry.
+
 ## 1. Ricci Flow Extension
 $$
 \frac{\partial g_{ij}}{\partial t} = -2\text{Ric}_{ij} + 2\lambda(t) g_{ij}

@@ -1,14 +1,18 @@
 # Failure Modes
 
+> The "Response" lines describe expected or intended model behavior — hypotheses,
+> not verified guarantees. Only F10 is an observed result. Detector-related
+> entries refer to the unimplemented draft in [`../02_engineering/Detectors.md`](../02_engineering/Detectors.md).
+
 ## F1 — Jump-to-Zero Depth
 **Scenario:** Order book depth drops to zero in a single tick.
-**Response:** $m \to 0$, $\vec L \to 0$ → freeze.
-**Severity:** Low (self-correcting).
+**Expected response:** $m \to 0$ and the body freezes. The physics path keeps such states finite (synthetic test), but the broader self-freeze criterion is not established; see [`goal.md`](../04_planning/goal.md), [H4](Hypotheses.md), and [E3](Experiments.md).
+**Severity:** Low (self-correcting in the tested zero-depth cases).
 
 ## F2 — Cross-Exchange Divergence
 **Scenario:** Binance and Coinbase diverge by 5%.
-**Response:** Cross-asset gravity pulls toward equilibrium.
-**Severity:** Medium (short-term).
+**Status:** outside the current input scope — the pipeline ingests a single venue's snapshots (Assumptions.md §5), so no cross-exchange response is implemented or modeled.
+**Severity:** Medium (short-term) if the scope is ever extended.
 
 ## F3 — Exogenous Shock
 **Scenario:** Major news event (Fed, hack).
@@ -33,13 +37,13 @@
 
 ## F7 — Symplectic Drift
 **Scenario:** Cumulative numeric error.
-**Response:** Periodic projection onto constraint manifold.
-**Severity:** Low.
+**Implemented response:** velocity-Verlet (symplectic) integration with O(Δt²) energy behavior; the constraint-manifold projection in [`Symplectic.md`](../01_theory/Symplectic.md) §4 is a proposal and is not implemented.
+**Severity:** Low in the synthetic conservative tests; on real replay the drift is observed and is tracked in F10/CON-008.
 
 ## F8 — Virial Breakdown
 **Scenario:** $T/V$ diverges from $-1/2$.
-**Response:** System returns to equilibrium (for conservative subsystem).
-**Severity:** Self-healing.
+**Expected response:** in the conservative subsystem the synthetic test converges to the I4 criterion; real-data behavior is not established.
+**Severity:** Monitored — a divergence is a falsification signal, not a self-healing guarantee.
 
 ## F9 — Generalized Virial Test Failure
 **Scenario:** Generalized virial theorem $|2\langle T \rangle + \langle V \rangle + \langle F_{ext} \cdot x \rangle + \langle F_{friction} \cdot x \rangle| > \text{threshold}$.

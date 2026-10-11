@@ -21,7 +21,7 @@ Hypotheses
 H1  ‖L‖ bounded                      (same as I1)
 H2  T/V → −1/2                       (same as I4)
 H3  Π ∝ ∫|L| dt  (proxy: recorded here, tested on simulation data)
-H7  Hedge constraint |φ| < 1e-6     (tested in test_mm.py)
+H7  Hedge constraint |φ| < 1e-6     (not implemented — no test; Axiom 5 / CON-009)
 """
 
 from __future__ import annotations

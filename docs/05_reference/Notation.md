@@ -7,18 +7,18 @@
 | $i, j$ | Asset index (1,2,3) | — |
 | $t$ | Tick number | — |
 | $P_i$ | Price of asset i | USDT |
-| $P_i^\mu$ | Microprice | USDT |
-| $x_i$ | Log microprice | — |
+| $P_i^\mu$ | Microprice (see `../01_theory/Microprice.md`; implementation status is CON-011) | USDT |
+| $x_i$ | Model position, $x_i = \ln P_i^\mu$ | — |
 | $v_i$ | Orbital velocity | 1/tick |
 | $p_i$ | Momentum | — |
-| $m_i$ | Effective mass | — |
+| $m_i$ | Model mass, $m_i = \ln(1 + \text{depth})$ (not a measured physical mass) | — |
 | $I_i$ | Imbalance | — |
 | $\gamma_i$ | Friction | — |
 | $q_k^{b,i}$ | Bid depth at level k | — |
 | $q_k^{a,i}$ | Ask depth at level k | — |
-| $G$ | Gravitational constant | 1.0 |
+| $G_{eff}$ | Self-induced coupling $1/\langle d^2 \rangle$ (not a free constant; Axiom 4) | — |
 | $\vec L$ | Angular momentum | — |
-| $\Pi$ | Cumulative profit | — |
+| $\Pi$ | Proposed mathematical work functional (Axiom 7). Not profit or P&L | — |
 | $\phi_{ij}$ | Hedge constraint | — |
 | $\lambda_i$ | Lagrange multiplier | — |
 | $T$ | Kinetic energy | — |
@@ -33,4 +33,5 @@
 
 ## Indices
 - Superscript: type (b=bid, a=ask, eff=effective)
+- `ns` suffix (as in `ts_exchange_ns`): nanoseconds
 - Subscript: coordinate (i=asset, k=level)

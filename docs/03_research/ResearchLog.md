@@ -183,7 +183,7 @@ state of the repository rather than the intent of its documents.
   ADR-011 records the feed/storage decisions (snapshots not diffs, latest-wins
   alignment, no derived quantities stored).
 - **Tests** (offline, deterministic, injected clock and transport):
-  `tests/test_fast_l2_client.py` (17) and `tests/test_tick_buffer.py` (13) —
+  `tests/test_fast_l2_client.py` (17) and `tests/test_tick_buffer.py` (15) —
   including a real loopback WebSocket run and the 100 000-tick acceptance run.
 - **Live run.** `stream.binance.com` answered **HTTP 451** from this network;
   `data-stream.binance.vision` served the identical payloads. Captured 2 785
@@ -268,3 +268,31 @@ state of the repository rather than the intent of its documents.
 - Python tests: `python -m pytest -q` could not start (`/usr/bin/python: No module named pytest`); JAX and the Phase 1 runtime dependencies are also absent. The historical 41-pass result is not represented as a current run.
 
 **Outcome:** documentation-only change. CON-008 and CON-009 remain open; no model resolution was invented.
+
+---
+
+## [2026-10-11] [Documentation] [Correctness, duplication, and drift audit]
+
+**Goal:** Verify the documentation against the code, tests, and committed data; remove stale duplicate claims and any statement that could mislead a reader about what is implemented.
+
+**Method:**
+- Link audit over all 104 Markdown files (relative targets) and stub audit: 48 canonical docs ↔ 48 flat stubs, no broken targets, no duplicate canonical names.
+- Cross-checked every numeric and file claim against `src/`, `tests/`, `tests/data/`, and the pinned versions on PyPI (jax 0.10.2, pytest 9.1.1, websockets 17.2, orjson 3.13.0, polars 2.0.0 all exist; `polars[rtcompat]` is a real extra).
+- Compared the documented model formulas with `state_from_l2`, which produced a new open conflict (CON-011).
+- Tests were not run in this environment (pinned dependencies are not installed); the audit is documentation-only and no test threshold was touched.
+
+**Corrections:**
+- `Invariants.md`: I1's criterion now matches the test (`‖L‖ ≤ 10·⟨‖L‖⟩` in ≥95% of 10,000 ticks; `L_max < 1.0` in the two-body virial test). The `test_mm.py` (I3) and `test_sim.py` (I5) rows were legacy plans, not files in this repository; both are now marked "not implemented, no test". The `test_physics.py` header comment claiming H7 was tested in `test_mm.py` was corrected.
+- `Changelog.md`: the accuracy note and the v0.2.0/v0.4.0/v0.5.0 labels were stale after the 2026-10-11 delivery — `fast_l2_client` and `tick_buffer` exist; `detectors_numba`, `market_maker`, `simulation_live_v3` still do not.
+- `ResearchLog.md`: the 2026-10-11 method bullet said `test_tick_buffer.py` had 13 tests; the file has 15 (41 = 9 + 17 + 15).
+- `TickModel.md`: the timing section described a Coinbase/virtual-tick merge that does not exist; it now states the ADR-011 rule (one snapshot = one tick, latest-wins, no merging).
+- `Notation.md`/`Glossary.md`: `G` is not a constant of 1.0 (self-induced `G_eff`, Axiom 4) and `Π` is not profit (work functional, Axiom 7); detector/regime terms are labelled as proposals.
+- `PriorArt.md`: removed the "risk solved by geometric constraint" wording that CON-010 resolved, and labelled the A-S mapping/self-freeze as proposals.
+- `DataSpec.md`: `ts_exchange` → `ts_exchange_ns`; the "1 GB per 10M ticks" estimate is replaced by the measured fixture size (68,090 bytes / 2,785 ticks ≈ 24.5 bytes/tick).
+- `FMEA_Template.md`: duplicate RPN thresholds unified; the example no longer suggests an adaptive `dt` (ADR-006); `Symplectic.md`, `FailureModes.md` F7, and `HedgeMath.md` now mark the constraint projection as unimplemented.
+- Cross-references: `Implementation.md` sections are numbered so the existing `§2/§4/§5` references resolve; ADR/DataSpec/README/path references point to canonical `docs/0X_*` locations; `requirements.txt` documents the `polars[rtcompat]` fallback that README already pointed to.
+- Status lines updated for CON-011 across `Conflicts.md`, `TaskQueue.md`, `AgentSync.md`, `Limitations.md`, `README.md`, and `docs/README.md`.
+
+**New open conflict:** CON-011 — `state_from_l2._microprice` sums the whole price column instead of using the best bid/ask price, and `_gamma` divides the spread by a log price. The maintainer must either correct the implementation (then re-run the CON-008 measurements) or record the current construction as intended (ADR + documentation update).
+
+**Verification:** link/stub audits pass (0 broken targets); test counts verified per file (9 physics + 17 client + 15 buffer = 41); no code behavior changed (comments/docstrings only).

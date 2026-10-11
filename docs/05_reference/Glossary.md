@@ -8,22 +8,22 @@
 
 **Imbalance**: Normalized bid/ask depth difference.
 
-**Iceberg**: Hidden order that replenishes repeatedly.
+**Iceberg**: Hidden order that replenishes repeatedly. (Detector concept only — no iceberg classifier is implemented; see `../02_engineering/Detectors.md`.)
 
-**Spoof**: Large fake order that disappears without execution.
+**Spoof**: Large fake order that disappears without execution. (Detector concept only — not implemented.)
 
 **Orbit**: Trajectory of three bodies in $(\ln P, m, I)$ space.
 
 **Angular Momentum ($\vec L$)**: Measure of orbital rotation.
 
-**Virial Ratio**: Ratio T/V that tends toward -1/2.
+**Virial Ratio**: Ratio T/V that tends toward -1/2 in the conservative subsystem (I4).
 
 **Symplectic**: Energy-preserving integrator.
 
 **Hedge Constraint**: Mass ratio constraint between three assets.
 
-**Effective Mass**: Mass corrected for iceberg/spoof.
+**Model Mass**: $m_i = \ln(1 + \text{depth})$, a modeling choice, not a measured physical mass (Axiom 3). An iceberg/spoof-corrected variant is a detector proposal, not implemented.
 
-**Spoof Score**: Score of how fake a level is.
+**Spoof Score / Iceberg Score**: Detector-proposal metrics only; no scoring code exists (`../02_engineering/Detectors.md`).
 
-**Iceberg Score**: Score of how hidden a level is.
+**Π (work functional)**: Proposed mathematical functional (Axiom 7). It is not profit, P&L, or a profitability result.

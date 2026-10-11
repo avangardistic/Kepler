@@ -1,5 +1,8 @@
 # OrderBookMath
 
+> Exploratory notes; not implemented. The Benford and instability statements
+> are unvalidated hypotheses, not established market facts.
+
 ## Total Potential
 $$
 \Phi(p) = -G \sum_i \sum_k \frac{q_k^i}{|p - p_k^i|}
@@ -34,4 +37,4 @@ First-digit distribution of volumes should be Benford:
 $$
 P(d) = \log_{10}(1 + 1/d)
 $$
-Deviation = manipulation.
+A deviation is a flag for review (a hypothesis), not proof of manipulation.

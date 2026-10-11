@@ -1,29 +1,31 @@
 # Changelog
 
-> **Accuracy note (2026-10-10).** The v0.2.0–v0.5.0 entries below were produced
-> by the initial documentation generator and describe work that is **not
-> present in this repository**. As of 2026-10-10 the only source file is
-> `src/physics_jax.py`; `fast_l2_client`, `tick_buffer`, `detectors_numba`,
-> `market_maker` and `simulation_live_v3` do not exist. They are recorded here
-> as planned milestones (roadmap Phase 1, 3, 4, 5), not delivered features.
+> **Accuracy note (updated 2026-10-11).** The v0.2.0–v0.5.0 entries below were
+> produced by the initial documentation generator. At the time the note was
+> first written (2026-10-10) the only source file was `src/physics_jax.py`.
+> Since then `src/fast_l2_client.py` (T-001) and `src/tick_buffer.py` (T-002)
+> were delivered on 2026-10-11 under the *latest* entries below, and the
+> Implementation documentation exists. `detectors_numba`, `market_maker` and
+> `simulation_live_v3` are still **not** present and remain planned milestones
+> (roadmap Phases 3, 4, 5).
 
 ## v0.1.0 — 2025-01
 - Initial Concept, Philosophy, Strategy.
 
-## v0.2.0 — 2025-01 (planned — not in repository)
-- Added Implementation (documentation: `docs/Implementation.md`).
+## v0.2.0 — 2025-01 (partly delivered)
+- Added Implementation documentation (the document exists; see `docs/02_engineering/Implementation.md`).
 - Introduced physics_jax (delivered later, 2026-10-07).
 
 ## v0.3.0 — 2025-01 (planned — not in repository)
 - Added detectors_numba. → roadmap Phase 3, task T-005.
 - Added market_maker (A-S). → roadmap Phase 4, task T-006.
 
-## v0.4.0 — 2025-01 (planned — not in repository)
-- Migrated to uvloop + orjson. → roadmap Phase 1.
-- Added fast_l2_client. → roadmap Phase 1, task T-001.
+## v0.4.0 — 2025-01 (delivered 2026-10-11)
+- uvloop + orjson used where available with stdlib fallbacks. → ADR-010.
+- `fast_l2_client` delivered as `src/fast_l2_client.py`. → T-001, 2026-10-11.
 
 ## v0.5.0 — 2025-01 (planned — not in repository)
-- Ten L2 states.
+- Ten L2 states (draft taxonomy documented in `docs/03_research/RegimeCatalog.md`; no classifier implemented).
 - simulation_live_v3. → roadmap Phase 5, task T-007.
 
 ## v1.0.0 — (target)

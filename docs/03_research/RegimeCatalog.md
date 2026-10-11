@@ -1,5 +1,14 @@
 # Regime Catalog
 
+> **Status:** Draft taxonomy only. No regime classifier, detector, or automatic
+> response is implemented, and nothing here is a trading instruction. The
+> "Automatic Response" column describes the *intended conceptual* mapping; the
+> detector draft in [`../02_engineering/Detectors.md`](../02_engineering/Detectors.md)
+> has not been reconciled with the tick-time/no-filter constraints and T-005 is
+> still open. The parameter table is illustrative: its values are not derived
+> from the model geometry and would violate the no-hidden-parameter rule
+> (Axiom 4) if used as implementation constants.
+
 ## Ten L2 States
 
 | # | State | Signature | Automatic Response |
@@ -15,7 +24,7 @@
 | 9 | Flash | Depth → 0 | Freeze |
 | 10 | Squeeze | Sharp $I$ | Anti-gravity |
 
-## Parameter Table
+## Parameter Table (illustrative, not implementation constants)
 
 | State | $m$ | $I$ | $\gamma$ | $\|\vec L\|$ | Spread |
 |-------|-----|-----|----------|--------------|--------|

@@ -1,5 +1,9 @@
 # Quantum Extensions
 
+> Speculative analogy notes. No quantum model exists in the code, and the
+> quantities below (including `ℏ`) are undefined free parameters rather than
+> derived results.
+
 ## 1. Order Book Wavefunction
 $$
 \psi(x, t) = A(x,t) e^{iS(x,t)/\hbar}

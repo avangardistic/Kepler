@@ -1,5 +1,11 @@
 # Physics
 
+> **Status:** Model definition under test, not a validated result. Synthetic
+> tests pass; real-data replay fails I1/I2 in the documented paths
+> ([`../03_research/Conflicts.md`](../03_research/Conflicts.md) CON-008/F10),
+> and the self-induced `G` running average below is not implemented (CON-005
+> remark).
+
 ## Lagrangian
 
 $$
@@ -52,11 +58,10 @@ where:
 **Test mapping:** `test_virial_ratio_convergence` tests the standard form (I4)
 using a conservative two-body subsystem (no friction, I = 0, γ = 0) over
 20,000 ticks with dt = 0.001. It computes the time-averaged ratio and checks
-`|<T>/<V> + 0.5| < 0.2`, which is the I4 invariant criterion. A prior
-migration log entry claimed the test threshold had been "loosened to 1e-5"
-(CON-002); that was a writing error — the test has always used the I4 criterion
-above, and the test passes. The generalized form (I4b) applies when friction
-and external forces are present.
+`|<T>/<V> + 0.5| < 0.2`, which is the I4 invariant criterion. The generalized
+form (I4b) applies when friction and external forces are present. For the
+correction of an earlier log entry that claimed this threshold was "loosened to
+1e-5", see Conflicts.md CON-002 (a writing error; the test is unchanged).
 
 ## Noether Charge
 
@@ -83,7 +88,9 @@ $$
 G_{eff}(t) = \frac{1}{\langle d^2 \rangle_t} = \frac{1}{\frac{1}{N}\sum_{i<j} |x_i(t) - x_j(t)|^2}
 $$
 
-In practice, this is computed as a running average over recent ticks to ensure stability.
+A running time average over recent ticks is the documented intent, but the
+current implementation does **not** use one: `integrate` holds the value
+computed from the initial state for the whole run (CON-005 remark, open).
 
 **This replaces any "magic G" constant. If a constant is needed, it MUST be logged in Conflicts.md with justification.**
 

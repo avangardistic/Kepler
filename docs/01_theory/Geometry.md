@@ -1,5 +1,8 @@
 # Geometry
 
+> Exploratory notes on a proposed metric. Not implemented; the metric's `α` is
+> a free parameter and would need a derivation before use (Axiom 4).
+
 ## Manifold
 $$
 \mathcal{M} = \{x = (x_1, x_2, x_3)\}
